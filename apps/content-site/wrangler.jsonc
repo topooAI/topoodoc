@@ -1,0 +1,15 @@
+{
+  "name": "topoo-docs",
+  "account_id": "e12dd07e3951d3a5683b89fefd58085b",
+  "compatibility_date": "2026-03-28",
+  "assets": {
+    "directory": "./out"
+  },
+  "routes": [
+    {
+      "pattern": "doc.topoo.ai",
+      "custom_domain": true
+    }
+  ],
+  "workers_dev": false
+}

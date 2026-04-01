@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "site": {
+    "title": "__SITE_NAME__",
+    "description": "__SITE_DESCRIPTION__",
+    "domain": "__DOMAIN__"
+  },
+  "shell": {
+    "githubCountLabel": "Source",
+    "githubHref": "__GITHUB_URL__",
+    "homeAriaLabel": "__SITE_NAME__ home",
+    "homeHref": "/docs",
+    "newHref": "/docs",
+    "newLabel": "Docs",
+    "showGithubLink": true,
+    "showPrimaryAction": false,
+    "showSearch": true
+  },
+  "navigation": {
+    "primary": [
+      { "href": "/docs", "label": "Docs" }
+    ]
+  }
+}

@@ -3,40 +3,28 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { DocsBrand } from "./docs-brand";
-import { DocsToolbarSearch } from "./docs-toolbar-search";
-import { Button } from "./ui/button";
-import { getPageTreeLabel, type PageTree, type PageTreeNode } from "../lib/page-tree";
-import { cn } from "../lib/utils";
+import { DocsToolbarSearch } from "@/components/docs-toolbar-search";
+import { TopooBrand } from "@/components/topoo-brand";
+import { Button } from "@/components/ui/button";
+import { getPageTreeLabel, type PageTree, type PageTreeNode } from "@/lib/page-tree";
+import { cn } from "@/lib/utils";
 
-export type DocsShellNavItem = {
+type NavItem = {
   href: string;
   label: string;
 };
 
 type NavSection = {
   label: string;
-  items: DocsShellNavItem[];
+  items: NavItem[];
 };
 
-export type DocsShellProps = {
-  brand?: ReactNode;
+type DocsShellProps = {
   children: ReactNode;
-  githubCountLabel?: string;
-  githubHref?: string;
-  homeAriaLabel?: string;
-  homeHref?: string;
-  navLabelByUrl?: Record<string, string>;
-  newHref?: string;
-  newLabel?: string;
-  primaryNav?: DocsShellNavItem[];
-  showGithubLink?: boolean;
-  showPrimaryAction?: boolean;
-  showSearch?: boolean;
   tree: PageTree | null;
 };
 
-const defaultPrimaryNav: DocsShellNavItem[] = [
+const primaryNav = [
   { href: "/docs", label: "Docs" },
   { href: "/docs/components", label: "Components" },
   { href: "/docs/components/card", label: "Blocks" },
@@ -45,8 +33,18 @@ const defaultPrimaryNav: DocsShellNavItem[] = [
   { href: "/create", label: "Create" },
 ];
 
-const defaultNavLabelByUrl: Record<string, string> = {
-  "/docs": "Docs",
+const navLabelByUrl: Record<string, string> = {
+  "/docs": "Introduction",
+  "/docs/components": "Components",
+  "/docs/installation": "Installation",
+  "/docs/theming": "Theming",
+  "/docs/cli": "CLI",
+  "/docs/rtl": "RTL",
+  "/docs/skills": "Skills",
+  "/docs/mcp": "MCP Server",
+  "/docs/registry": "Registry",
+  "/docs/forms": "Forms",
+  "/docs/changelog": "Changelog",
 };
 
 function GitHubIcon() {
@@ -98,55 +96,44 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function nodeContainsPath(node: PageTreeNode, pathname: string): boolean {
-  if (node.url && isActive(pathname, node.url)) {
-    return true;
-  }
-
-  return (node.children ?? []).some((child) => nodeContainsPath(child, pathname));
-}
-
-function toNavItem(node: PageTreeNode, labelByUrl: Record<string, string>): DocsShellNavItem | null {
+function toNavItem(node: PageTreeNode): NavItem | null {
   if (node.type !== "page" || !node.url) {
     return null;
   }
 
   return {
     href: node.url,
-    label: getPageTreeLabel(node, labelByUrl),
+    label: getPageTreeLabel(node, navLabelByUrl),
   };
 }
 
-function flattenPages(nodes: PageTreeNode[], labelByUrl: Record<string, string>): DocsShellNavItem[] {
+function flattenPages(nodes: PageTreeNode[]): NavItem[] {
   return nodes.flatMap((node) => {
     if (node.type === "page") {
-      const item = toNavItem(node, labelByUrl);
+      const item = toNavItem(node);
       return item ? [item] : [];
     }
 
     if (node.type === "folder") {
-      return flattenPages(node.children ?? [], labelByUrl);
+      return flattenPages(node.children ?? []);
     }
 
     return [];
   });
 }
 
-function buildSectionsFromNodes(
-  nodes: PageTreeNode[],
-  labelByUrl: Record<string, string>,
-  rootLabel: string,
-): NavSection[] {
+function buildSidebarSections(tree: PageTree | null): NavSection[] {
+  const nodes = tree?.children ?? [];
   const sections: NavSection[] = [];
 
   const rootItems = nodes.flatMap((node) => {
-    const item = toNavItem(node, labelByUrl);
+    const item = toNavItem(node);
     return item ? [item] : [];
   });
 
   if (rootItems.length > 0) {
     sections.push({
-      label: rootLabel,
+      label: "Documents",
       items: rootItems,
     });
   }
@@ -156,7 +143,7 @@ function buildSectionsFromNodes(
       return;
     }
 
-    const items = flattenPages(node.children ?? [], labelByUrl);
+    const items = flattenPages(node.children ?? []);
     if (items.length === 0) {
       return;
     }
@@ -168,38 +155,6 @@ function buildSectionsFromNodes(
   });
 
   return sections;
-}
-
-function buildSidebarSections(
-  tree: PageTree | null,
-  labelByUrl: Record<string, string>,
-  pathname: string,
-): NavSection[] {
-  const nodes = tree?.children ?? [];
-  const rootItems = nodes.flatMap((node) => {
-    const item = toNavItem(node, labelByUrl);
-    return item ? [item] : [];
-  });
-
-  if (pathname === "/docs") {
-    return rootItems.length > 0 ? [{ label: "Topoo", items: rootItems }] : [];
-  }
-
-  const activeFolder = nodes.find((node) => node.type === "folder" && nodeContainsPath(node, pathname));
-
-  if (activeFolder) {
-    return buildSectionsFromNodes(
-      activeFolder.children ?? [],
-      labelByUrl,
-      getPageTreeLabel(activeFolder, labelByUrl),
-    );
-  }
-
-  if (rootItems.length > 0) {
-    return [{ label: "Topoo", items: rootItems }];
-  }
-
-  return buildSectionsFromNodes(nodes, labelByUrl, "Documents");
 }
 
 function SidebarLink({
@@ -226,24 +181,9 @@ function SidebarLink({
   );
 }
 
-export function DocsShell({
-  brand = <DocsBrand label="Docs" />,
-  children,
-  githubCountLabel = "GitHub",
-  githubHref = "https://github.com/topooAI/topoo",
-  homeAriaLabel = "Docs home",
-  homeHref = "/docs",
-  navLabelByUrl = defaultNavLabelByUrl,
-  newHref = "/create",
-  newLabel = "New",
-  primaryNav = defaultPrimaryNav,
-  showGithubLink = true,
-  showPrimaryAction = true,
-  showSearch = true,
-  tree,
-}: DocsShellProps) {
+export function DocsShell({ children, tree }: DocsShellProps) {
   const pathname = usePathname();
-  const sidebarSections = buildSidebarSections(tree, navLabelByUrl, pathname);
+  const sidebarSections = buildSidebarSections(tree);
 
   return (
     <div className="min-h-screen bg-background">
@@ -252,8 +192,8 @@ export function DocsShell({
           <div className="flex h-(--header-height) items-center gap-4">
             <div className="flex items-center gap-3">
               <Button asChild className="hidden size-8 lg:inline-flex" size="icon-sm" variant="ghost">
-                <Link aria-label={homeAriaLabel} href={homeHref}>
-                  {brand}
+                <Link aria-label="Topoo Docs home" href="/docs">
+                  <TopooBrand />
                 </Link>
               </Button>
               <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
@@ -273,40 +213,30 @@ export function DocsShell({
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              {showSearch ? (
-                <div className="hidden md:flex">
-                  <DocsToolbarSearch />
-                </div>
-              ) : null}
-              {showSearch ? <div className="hidden h-4 w-px bg-border lg:block" /> : null}
-              {showGithubLink ? (
-                <>
-                  <a
-                    className="inline-flex h-8 items-center gap-2 rounded-lg px-2 text-sm font-medium text-foreground/72 transition-colors hover:text-foreground"
-                    href={githubHref}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <GitHubIcon />
-                    <span>{githubCountLabel}</span>
-                  </a>
-                  <div className="hidden h-4 w-px bg-border lg:block" />
-                </>
-              ) : null}
+              <div className="hidden md:flex">
+                <DocsToolbarSearch />
+              </div>
+              <div className="hidden h-4 w-px bg-border lg:block" />
+              <a
+                className="inline-flex h-8 items-center gap-2 rounded-lg px-2 text-sm font-medium text-foreground/72 transition-colors hover:text-foreground"
+                href="https://github.com/topooAI/topoo"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <GitHubIcon />
+                <span>111k</span>
+              </a>
+              <div className="hidden h-4 w-px bg-border lg:block" />
               <Button aria-label="Toggle theme" className="size-8" size="icon-sm" variant="ghost">
                 <ModeIcon />
               </Button>
-              {showPrimaryAction ? (
-                <>
-                  <div className="hidden h-4 w-px bg-border lg:block" />
-                  <Button asChild className="h-[31px] rounded-lg px-3" size="sm">
-                    <Link href={newHref}>
-                      <PlusIcon />
-                      {newLabel}
-                    </Link>
-                  </Button>
-                </>
-              ) : null}
+              <div className="hidden h-4 w-px bg-border lg:block" />
+              <Button asChild className="h-[31px] rounded-lg px-3" size="sm">
+                <Link href="/create">
+                  <PlusIcon />
+                  New
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

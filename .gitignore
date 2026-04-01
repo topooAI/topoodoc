@@ -4,5 +4,12 @@ node_modules
 .DS_Store
 
 apps/*
+!apps/content-site/
+apps/content-site/.next
+apps/content-site/out
+apps/content-site/node_modules
+apps/content-site/.source
+apps/content-site/content/docs
+apps/content-site/docs.config.ts
 
 packages/*/node_modules

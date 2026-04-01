@@ -5,6 +5,12 @@
   "packageManager": "pnpm@10.4.0",
   "type": "module",
   "scripts": {
-    "docs:create": "node scripts/create-fumadocs-system.mjs"
+    "docs:create": "node scripts/create-fumadocs-system.mjs",
+    "content:create": "node scripts/create-docs-content-repo.mjs",
+    "content:sync": "node scripts/sync-content-repo.mjs",
+    "content:watch": "node scripts/watch-content-repo.mjs",
+    "content:dev": "node scripts/dev-content-site.mjs",
+    "content:build": "node scripts/sync-content-repo.mjs && pnpm --dir apps/content-site build",
+    "content:deploy": "node scripts/sync-content-repo.mjs && pnpm --dir apps/content-site deploy"
   }
 }
