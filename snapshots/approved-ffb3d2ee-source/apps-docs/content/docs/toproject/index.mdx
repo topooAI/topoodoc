@@ -1,0 +1,143 @@
+---
+title: "Project Core Structure"
+description: "Project architecture contract synced from the project module source documents."
+---
+## Purpose
+This document is the index and executive summary for the `project` module architecture.
+
+It does not try to hold the full architecture in one place.
+
+Its job is to define:
+- what the `project` module is centered around
+- why the architecture had to be formalized
+- which documents define each major part of the system
+- how those documents relate to each other
+
+## Why This Exists
+The project module reached a point where UI refinement alone was no longer enough.
+
+We hit repeated structural drift:
+- `Work items` drifting toward timeline/gantt behavior
+- `Timeline` and `Work items` sharing rendering assumptions that should have stayed separate
+- `Overview`, `Outcome`, `Workstream`, `Tasks`, and `Notes` carrying overlapping meanings
+- `Project` itself behaving partly like a task container, partly like a document, and partly like a runtime panel
+
+That made one thing clear:
+
+The missing piece was not another visual pass.
+
+The missing piece was a project-centered architecture contract.
+
+## Core Thesis
+`Project` is the git-backed execution container of the agentic platform.
+
+It is not:
+- only a runtime panel
+- only a task board
+- only a document surface
+- only a wrapper around an execution engine
+
+It is the root coordination object that organizes:
+- outcome
+- workstream
+- task
+- activity
+- asset / file
+- timeline projection
+- runtime state
+
+under an agent-led operating model.
+
+## Document Structure
+This architecture is intentionally split into focused documents to avoid one oversized, high-context page.
+
+### 1. Index
+- [PROJECT_CORE_STRUCTURE.md](/docs/toproject)
+- Purpose: executive summary and document map
+
+### 2. Object Model
+- [PROJECT_OBJECT_MODEL.md](/docs/toproject/object-model)
+- Focus: `what` the project-centered object model is and `why` it exists
+
+### 3. Git Model
+- [PROJECT_GIT_MODEL.md](/docs/toproject/git-model)
+- Focus: `what` git domains exist, why git is core, and how project binds to them conceptually
+
+### 4. Runtime Model
+- [PROJECT_RUNTIME_MODEL.md](/docs/toproject/runtime-model)
+- Focus: `what` the operating layer is, including runtime, execution mode, commands, hooks, automation, and continuity
+
+### 5. UI Mapping
+- [PROJECT_UI_MAPPING.md](/docs/toproject/ui-mapping)
+- Focus: how the current UI maps to the architecture, what is aligned, and what is still transitional
+
+## Reading Order
+Recommended reading order:
+
+1. this document
+2. `PROJECT_OBJECT_MODEL.md`
+3. `PROJECT_GIT_MODEL.md`
+4. `PROJECT_RUNTIME_MODEL.md`
+5. `PROJECT_UI_MAPPING.md`
+
+## Architecture Shape
+The architecture is split into three levels:
+
+### 1. Project-Centered Definition
+This defines the root object and its subordinate object types.
+
+Primary source:
+- `PROJECT_OBJECT_MODEL.md`
+
+### 2. Operating Definition
+This defines how the project is allowed to execute and how versioned execution is governed.
+
+Primary sources:
+- `PROJECT_GIT_MODEL.md`
+- `PROJECT_RUNTIME_MODEL.md`
+
+### 3. UI And Surface Mapping
+This defines how the current implementation should express the architecture.
+
+Primary source:
+- `PROJECT_UI_MAPPING.md`
+
+## Reference Position
+This architecture is informed by agentic platform engineering references such as the Saul Fernandez model, but it is not a direct copy.
+
+We adopt principles, then extend them locally.
+
+The most important adopted principles are:
+- agent intelligence must be treated as infrastructure
+- git is the backbone
+- intent, execution, and knowledge should be separated
+- execution requires explicit operating surfaces
+
+The most important local extensions are:
+- `Project` as the primary product object
+- `Outcome -> Workstream -> Task` as the core structural chain
+- `Activity` as execution evidence
+- project-centered UI contracts
+- Cloudflare-only runtime assumptions
+
+## Current Direction
+The current implementation direction should converge toward:
+- project as a git-backed execution container
+- Cloudflare as the runtime plane
+- outcome, workstream, task, activity, and assets as explicit object surfaces
+- overview as a summary surface, not a dumping ground
+- work items, board, and timeline as separate projections over the same execution model
+
+## Non-Goals
+- putting the entire architecture into one endlessly growing page
+- collapsing project into runtime
+- collapsing project into task tracking
+- collapsing project into documentation only
+- collapsing project into a single execution engine
+
+## Next Docs
+The next architecture documents should continue the same split:
+- definition docs answer `what + why`
+- implementation docs answer `how`
+
+This split is required to keep `doc.topoo.ai` readable, composable, and low-context.

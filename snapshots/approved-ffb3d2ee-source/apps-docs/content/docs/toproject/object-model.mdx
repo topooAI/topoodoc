@@ -1,0 +1,187 @@
+---
+title: "Project Object Model"
+description: "Project architecture contract synced from the project module source documents."
+---
+## Purpose
+This document defines the `what + why` of the project-centered object model.
+
+It does not define detailed implementation flows.
+
+## Core Position
+This architecture is project-centered first.
+
+The primary design question is:
+- what is the project object
+- how do all other objects derive meaning from it
+
+Not:
+- what tools are available
+- what runtime is active
+- what one engine can do
+
+## Project As The Root Object
+Project is the root coordination object of the module.
+
+Everything else is subordinate to project context.
+
+That means:
+- outcome belongs to a project
+- workstream belongs to a project
+- task belongs to a project
+- activity belongs to a project
+- assets belong to a project
+- runtime is the current operating state of a project
+
+Project gives execution data its shared meaning, boundary, and version spine.
+
+## What Project Owns
+Project owns six kinds of things.
+
+### 1. Intent
+- summary
+- objective
+- scope boundary
+- acceptance framing
+
+### 2. Result Structure
+- outcome
+- success criteria
+- result definitions
+
+### 3. Execution Structure
+- workstreams
+- tasks
+- dependencies
+- timeline projections
+
+### 4. Operating State
+- status
+- execution runtime
+- execution mode
+- progress
+- blocking
+- dates
+
+### 5. Operating Evidence
+- activity
+- reviews
+- decisions
+- approvals
+- automation traces
+- git-related events
+
+### 6. Knowledge And Artifacts
+- files
+- docs
+- linked artifacts
+- design references
+
+## Canonical Relationship Chain
+The canonical relationship chain is:
+
+`Project -> Outcome -> Workstream -> Task -> Activity / Assets`
+
+This does not imply a strict tree at every moment.
+
+It defines semantic direction:
+- project sets the boundary
+- outcome defines success
+- workstream defines strategic lines of effort
+- task defines execution units
+- activity and assets capture what happened and what was produced
+
+## Canonical Entity Definitions
+
+### Project
+The top-level execution container.
+
+Responsibilities:
+- hold the primary objective
+- bind together its object types
+- expose current operating state
+- connect project intent to project execution
+- bind project structure to git and runtime surfaces
+
+### Outcome
+A result object.
+
+Outcome answers:
+- what result should exist if the project succeeds
+- how do we know it succeeded
+
+Outcome is not:
+- feature decomposition
+- task breakdown
+- timeline itself
+
+### Workstream
+A structured execution line.
+
+Workstream answers:
+- by which major lines of effort do we pursue the outcome
+- what problem domain each line covers
+- what key risk or uncertainty makes the line necessary
+
+Workstream owns:
+- key features
+- execution lines
+- key risks
+- strategic decomposition of delivery
+
+### Task
+A concrete execution unit.
+
+Task answers:
+- what specific work must be done
+- who or what is progressing it
+- what is its state, timing, and dependency
+
+### Activity
+An execution history object.
+
+Activity answers:
+- what happened
+- who or what did it
+- when it happened
+
+Activity may include:
+- update
+- decision
+- review
+- approval
+- note
+
+### Asset / File
+A resource object.
+
+This includes:
+- linked files
+- docs
+- references
+- design artifacts
+- delivery attachments
+
+### Runtime
+A project facet, not the project itself.
+
+Runtime answers:
+- what is the current active execution state
+- which agent mode is active
+- what is blocked, progressing, or waiting
+
+## Deliberate Boundaries
+
+### Notes Are Not A Top-Level Object Type
+Notes belong under:
+- activity
+- files
+- knowledge artifacts
+
+### Risk Lives Inside Workstream
+Risk is part of decomposition logic, not a detached register.
+
+### Project Is Not Runtime
+Project owns runtime, but is larger than runtime.
+
+### Project Is Not An Engine
+Project may dispatch into an execution engine, but should not collapse into one.

@@ -1,0 +1,150 @@
+---
+title: "Project UI Mapping"
+description: "Project architecture contract synced from the project module source documents."
+---
+## Purpose
+This document maps the current `project` UI to the project-centered architecture.
+
+It distinguishes:
+- what is already aligned
+- what is transitional
+- what is still missing
+
+This is the bridge between architecture definition and later implementation work.
+
+## Control Plane Mapping
+The top property area is already close to the intended project control plane.
+
+### Already Aligned
+- `Status`
+- `Priority`
+- `Acceptance`
+- `Execution Runtime`
+- `Lead (Human)`
+- `Execution Agent`
+- `Progress`
+- `Dates`
+- `Blocking` or `Blocked by`
+- `Members`
+- `Track`
+- `Labels`
+
+### Still Missing Or Inconsistent
+- `Execution Mode` is defined architecturally but not represented yet
+- milestone handling is still split between property display and lower structure
+- git state is still fragmented into task-level repo / branch / PR fragments
+
+## Tab Mapping
+
+### Overview
+Current meaning:
+- summary callout
+- embedded timeline projection
+
+Status:
+- aligned
+
+### Outcome
+Current meaning:
+- expected outcomes list
+
+Status:
+- partially aligned
+
+Still missing:
+- success criteria
+- measurable completion indicators
+
+### Workstream
+Current meaning:
+- key features
+- execution lines
+- key risks
+
+Status:
+- directionally aligned, but still transitional
+
+Still temporary:
+- execution lines are currently derived from child issues or grouped issue rows
+
+Still missing:
+- workstream-specific objective text
+- workstream-specific rationale
+- explicit mapping from workstream to outcome
+
+### Tasks
+Current meaning:
+- execution metadata for issue detail
+- task list for group detail
+
+Status:
+- partially aligned
+
+Inconsistency:
+- issue detail `Tasks` is closer to execution metadata
+- group detail `Tasks` is closer to a real task list
+
+### Activity
+Current meaning:
+- simple execution log items
+
+Status:
+- aligned in direction, incomplete in depth
+
+Still missing:
+- typed events
+- decision / review / approval variants
+- git event integration
+- automation and hook-generated events
+
+### Assets & Files
+Current meaning:
+- linked docs and linked files surface
+
+Status:
+- aligned in direction, incomplete in scope
+
+Still missing:
+- clearer distinction between docs, files, and design artifacts
+- stronger connection to the knowledge git domain
+
+## View Projection Mapping
+
+### Work Items
+Status:
+- aligned
+
+Meaning:
+- list/table-first representation of execution objects
+
+### Timeline
+Status:
+- aligned
+
+Meaning:
+- time-axis-first projection over shared execution data
+
+### Board
+Status:
+- aligned
+
+Meaning:
+- status-flow-first projection over shared execution data
+
+## Immediate Gaps
+The most important remaining gaps are structural:
+
+1. `Execution Mode` is missing in the UI
+2. project-level git binding is missing
+3. workstream still borrows task-derived data
+4. outcome needs stronger success-criteria semantics
+5. activity needs typed operating evidence
+
+## Immediate Priorities
+Based on current alignment, the next implementation priorities are:
+
+1. add `Execution Mode` to the control plane
+2. define a project-level git surface
+3. strengthen the `Outcome` object
+4. separate workstream data from task-derived display
+5. introduce typed activity events

@@ -1,0 +1,222 @@
+---
+title: "Project Git Model"
+description: "Project architecture contract synced from the project module source documents."
+---
+## Purpose
+This document defines the `what + why` of git as a core project structure.
+
+It explains:
+- why git is part of the project model rather than a secondary integration
+- how git should be layered inside a project-centered platform
+- why Cloudflare's git connection is not sufficient by itself
+
+## Core Position
+Git is the hard execution spine of the project.
+
+It is the boundary for:
+- versioning
+- branching
+- review
+- recovery
+- promotion
+- auditability
+
+Because of this, project must be modeled as a git-backed execution container.
+
+## Why Git Is Core
+Without git as a first-class structure:
+- intent changes are weakly versioned
+- execution changes are hard to audit
+- review has no hard edge
+- branching and recovery become ambiguous
+- deployments become disconnected from project meaning
+
+Git is what turns agentic execution from a stream of actions into a system with durable boundaries.
+
+## Git Layers
+The platform should not treat all git concerns as the same thing.
+
+There are at least three different layers:
+
+### 1. Provider Layer
+This is the layer exposed by Git providers such as GitHub or GitLab.
+
+It includes:
+- repositories
+- branches
+- pull requests
+- review state
+- merge state
+- webhooks / provider signals
+
+This layer answers:
+- where does the versioned source live
+- how does collaboration happen around it
+
+### 2. Deploy Layer
+This is the layer where runtime platforms connect to git for build and deploy purposes.
+
+Cloudflare's repository connection belongs here.
+
+It includes:
+- repository connection
+- branch-to-environment mapping
+- build triggers
+- deployment triggers
+- preview / production promotion
+
+This layer answers:
+- how does versioned source reach runtime environments
+
+### 3. Project Orchestration Layer
+This is the layer that the `project` module must own conceptually.
+
+It includes:
+- repository bindings
+- domain meaning
+- execution rules around versioned work
+- mapping between project semantics and git surfaces
+
+This layer answers:
+- what role does each repository play in this project
+- how does project intent connect to execution and knowledge
+- what is the version spine of the project as a product object
+
+## Cloudflare Git Connection Is Not The Whole Git Architecture
+Cloudflare can connect a Worker or application to a git repository and use it for build and deploy flows.
+
+That is useful, but it only solves one layer:
+- deploy binding
+
+It does not define:
+- project object semantics
+- spec versioning
+- knowledge versioning
+- project-level review boundaries
+- the distinction between intent, execution, and knowledge
+
+Therefore:
+- Cloudflare git connection is necessary
+- but it is not sufficient
+
+The project must remain the center of git meaning.
+
+Cloudflare is a runtime/deploy edge, not the owner of project semantics.
+
+## Project-Level Git Registry
+At the project level, git should eventually be represented through an explicit registry of bindings.
+
+Conceptually, a project should know:
+- which repositories it is bound to
+- which role each repository plays
+- which repository is primary for execution
+- which repository is primary for knowledge
+- which repository or branch is connected to deployment targets
+
+This registry is not yet fully implemented, but it is the correct model direction.
+
+## Canonical Git Domains
+Project should be able to bind to three versioned domains.
+
+### 1. Spec Domain
+This covers the definition of the project itself.
+
+Examples:
+- summary / intent
+- outcomes
+- workstream structure
+- acceptance logic
+- planning metadata
+
+Question answered:
+- what are we trying to do
+
+### 2. Execution Domain
+This covers the implementation surface agents actually modify.
+
+Examples:
+- branches
+- commits
+- pull requests
+- review state
+- merge state
+- worktrees
+
+Question answered:
+- what is actually being changed
+
+### 3. Knowledge Domain
+This covers supporting knowledge and artifacts.
+
+Examples:
+- docs
+- linked files
+- assets
+- decision context
+
+Question answered:
+- what supporting context exists around the project
+
+## Git Spine Concepts
+At the project level, git should eventually be represented through concepts such as:
+- repository bindings
+- domain type per repository
+- worktree entry / exit
+- branch state
+- commit progression
+- review state
+- merge / promotion state
+- deploy target binding
+
+## Deploy Binding To Cloudflare
+Cloudflare belongs to the runtime/deploy layer.
+
+Its role in the git model is:
+- attach runtime surfaces to versioned source
+- define which branches or revisions flow to which environments
+- make preview and production progression explicit
+
+This means Cloudflare should be modeled as consuming git state, not defining project git semantics.
+
+The correct relationship is:
+
+`Project -> Git domains -> provider surfaces -> Cloudflare deploy binding`
+
+Not:
+
+`Cloudflare -> defines git architecture for the project`
+
+## Git Events As Activity Evidence
+Git is not only a storage boundary. It is also an evidence source.
+
+Project activity should eventually be able to absorb git-derived events such as:
+- branch created
+- worktree entered
+- commit pushed
+- review requested
+- review approved
+- PR merged
+- deploy triggered
+- deploy promoted
+
+This is how git stops being an invisible implementation detail and becomes part of the project evidence trail.
+
+## Deliberate Position
+The exact number of repositories may vary.
+
+What matters is not repo count by itself.
+
+What matters is that the architecture explicitly separates:
+- intent
+- execution
+- knowledge
+
+and treats each as versioned.
+
+## Relationship To The Rest Of The Architecture
+This document defines the git model conceptually.
+
+Related documents:
+- object semantics: [PROJECT_OBJECT_MODEL.md](/docs/toproject/object-model)
+- operating/runtime semantics: [PROJECT_RUNTIME_MODEL.md](/docs/toproject/runtime-model)
+- current UI alignment: [PROJECT_UI_MAPPING.md](/docs/toproject/ui-mapping)

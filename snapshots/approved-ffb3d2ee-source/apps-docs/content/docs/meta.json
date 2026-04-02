@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "title": "Boards",
+  "pages": [
+    "index",
+    "toagent",
+    "towork",
+    "toproject",
+    "tomemory",
+    "topooui"
+  ]
+}
