@@ -98,6 +98,15 @@ async function collectDocFiles(dir, prefix = "") {
   return files;
 }
 
+async function pathExists(targetPath) {
+  try {
+    await readdir(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function renderDocsConfig(contentConfig, navLabelByUrl) {
   const metadataTitle = JSON.stringify(contentConfig.site?.title ?? "Docs");
   const metadataDescription = JSON.stringify(contentConfig.site?.description ?? "Documentation.");
@@ -142,11 +151,30 @@ const contentRepoDir = path.resolve(rootDir, args.content ?? process.env.TOPOODO
 const siteDir = path.resolve(rootDir, args.site ?? "apps/content-site");
 const contentSourceDir = path.join(contentRepoDir, "content/docs");
 const contentTargetDir = path.join(siteDir, "content/docs");
+const systemContentDir = path.join(rootDir, "system-content/docs");
+const systemOwnedDirs = ["topooui"];
 const contentConfigPath = path.join(contentRepoDir, "topoodoc.content.json");
 const docsConfigPath = path.join(siteDir, "docs.config.ts");
 
 const contentConfig = JSON.parse(await readFile(contentConfigPath, "utf8"));
-const docFiles = await collectDocFiles(contentSourceDir);
+
+await rm(contentTargetDir, { recursive: true, force: true });
+await mkdir(path.dirname(contentTargetDir), { recursive: true });
+await cp(contentSourceDir, contentTargetDir, { recursive: true });
+
+for (const systemOwnedDir of systemOwnedDirs) {
+  const sourcePath = path.join(systemContentDir, systemOwnedDir);
+  const targetPath = path.join(contentTargetDir, systemOwnedDir);
+
+  if (!(await pathExists(sourcePath))) {
+    continue;
+  }
+
+  await rm(targetPath, { recursive: true, force: true });
+  await cp(sourcePath, targetPath, { recursive: true });
+}
+
+const docFiles = await collectDocFiles(contentTargetDir);
 const navLabelByUrl = {};
 
 for (const item of contentConfig.navigation?.primary ?? []) {
@@ -154,16 +182,13 @@ for (const item of contentConfig.navigation?.primary ?? []) {
 }
 
 for (const relativePath of docFiles) {
-  const filePath = path.join(contentSourceDir, relativePath);
+  const filePath = path.join(contentTargetDir, relativePath);
   const raw = await readFile(filePath, "utf8");
   const url = docsUrlFromRelativePath(relativePath);
   const fallback = titleFromSlug(path.basename(relativePath, path.extname(relativePath)));
   navLabelByUrl[url] = parseFrontmatterTitle(raw) ?? fallback;
 }
 
-await rm(contentTargetDir, { recursive: true, force: true });
-await mkdir(path.dirname(contentTargetDir), { recursive: true });
-await cp(contentSourceDir, contentTargetDir, { recursive: true });
 await writeFile(docsConfigPath, renderDocsConfig(contentConfig, navLabelByUrl), "utf8");
 
 console.log(`[content:sync] Synced ${contentRepoDir} into ${siteDir}`);

@@ -1,0 +1,10 @@
+{
+  "title": "Docs",
+  "pages": [
+    "index",
+    "schema",
+    "renderer-contract",
+    "blocks",
+    "content-ownership"
+  ]
+}
