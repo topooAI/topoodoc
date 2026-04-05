@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -75,6 +75,23 @@ function docsUrlFromRelativePath(relativePath) {
   return `/docs/${withoutExt}`;
 }
 
+function relativeDocPathFromHref(href) {
+  if (href === "/docs") {
+    return "index.mdx";
+  }
+
+  const withoutPrefix = href.replace(/^\/docs\//u, "");
+  return `${withoutPrefix}.mdx`;
+}
+
+function blockFolderFromHref(href) {
+  if (href === "/docs") {
+    return null;
+  }
+
+  return href.replace(/^\/docs\//u, "").split("/")[0] ?? null;
+}
+
 async function collectDocFiles(dir, prefix = "") {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = [];
@@ -115,6 +132,20 @@ async function collectAllFiles(dir, prefix = "") {
   }
 
   return files;
+}
+
+async function pathExists(targetPath) {
+  try {
+    await access(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function writeJson(targetPath, value) {
+  await mkdir(path.dirname(targetPath), { recursive: true });
+  await writeFile(`${targetPath}`, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
 function renderDocsConfig(contentConfig, navLabelByUrl) {
@@ -164,6 +195,7 @@ const contentTargetDir = path.join(siteDir, "content/docs");
 const systemContentDir = path.join(rootDir, "system-content/docs");
 const systemOwnedRoots = ["topooui"];
 const contentConfigPath = path.join(contentRepoDir, "topoodoc.content.json");
+const contentModelDir = path.join(contentRepoDir, "content-model");
 const docsConfigPath = path.join(siteDir, "docs.config.ts");
 
 await rm(contentTargetDir, { recursive: true, force: true });
@@ -188,6 +220,108 @@ try {
 }
 
 const contentConfig = JSON.parse(await readFile(contentConfigPath, "utf8"));
+const hasContentModel = await pathExists(contentModelDir);
+
+if (hasContentModel) {
+  const [siteModel, blocksModel, topicsModel, pagesModel] = await Promise.all([
+    readFile(path.join(contentModelDir, "site.json"), "utf8").then(JSON.parse),
+    readFile(path.join(contentModelDir, "blocks.json"), "utf8").then(JSON.parse),
+    readFile(path.join(contentModelDir, "topics.json"), "utf8").then(JSON.parse),
+    readFile(path.join(contentModelDir, "pages.json"), "utf8").then(JSON.parse),
+  ]);
+
+  const boardOrder = siteModel.boardOrder ?? blocksModel.map((block) => block.id);
+  const systemOwnedBoards = new Set(siteModel.systemOwnedBoards ?? []);
+  const blockById = new Map(blocksModel.map((block) => [block.id, block]));
+  const topicById = new Map(topicsModel.map((topic) => [topic.id, topic]));
+  const pageById = new Map(pagesModel.map((page) => [page.id, page]));
+
+  for (const page of pagesModel) {
+    const pagePath = path.join(contentRepoDir, page.file);
+    if (!(await pathExists(pagePath))) {
+      throw new Error(`[content:model] Missing page body for ${page.id}: ${page.file}`);
+    }
+  }
+
+  const rootPages = ["index"];
+  for (const blockId of boardOrder) {
+    if (blockId === "topoo" || systemOwnedBoards.has(blockId)) {
+      continue;
+    }
+
+    const block = blockById.get(blockId);
+    if (!block) {
+      throw new Error(`[content:model] Unknown block ${blockId} in site.json`);
+    }
+
+    const folder = blockFolderFromHref(block.href);
+    if (folder) {
+      rootPages.push(folder);
+    }
+  }
+
+  await writeJson(path.join(contentTargetDir, "meta.json"), {
+    root: true,
+    title: "Boards",
+    pages: rootPages,
+  });
+
+  for (const block of blocksModel) {
+    if (block.id === "topoo" || systemOwnedBoards.has(block.id)) {
+      continue;
+    }
+
+    const folder = blockFolderFromHref(block.href);
+    if (!folder) {
+      continue;
+    }
+
+    const blockTopics = topicsModel.filter((topic) => topic.blockId === block.id);
+    const pages = [];
+
+    for (const topic of blockTopics) {
+      for (const pageId of topic.pageIds ?? []) {
+        const page = pageById.get(pageId);
+        if (!page) {
+          throw new Error(`[content:model] Unknown page ${pageId} in topic ${topic.id}`);
+        }
+
+        let pageKey = "index";
+
+        if (page.href !== block.href) {
+          const relativeDocPath = relativeDocPathFromHref(page.href);
+          const blockRelative = relativeDocPath.replace(`${folder}/`, "");
+          pageKey = blockRelative.replace(/\.(md|mdx)$/u, "").replace(/\/index$/u, "") || "index";
+        }
+
+        pages.push(pageKey || "index");
+      }
+    }
+
+    await writeJson(path.join(contentTargetDir, folder, "meta.json"), {
+      title: block.label,
+      pages,
+    });
+  }
+
+  const existingPrimaryNav = contentConfig.navigation?.primary ?? [];
+  const systemOwnedPrimaryNav = existingPrimaryNav.filter((item) => {
+    const folder = blockFolderFromHref(item.href);
+    return folder ? systemOwnedBoards.has(folder) : false;
+  });
+
+  contentConfig.navigation = {
+    ...(contentConfig.navigation ?? {}),
+    primary: [
+      ...blocksModel.map((block) => ({
+        href: block.href,
+        label: block.label,
+      })),
+      ...systemOwnedPrimaryNav,
+    ],
+  };
+}
+
 const docFiles = await collectDocFiles(contentTargetDir);
 const navLabelByUrl = {};
 
