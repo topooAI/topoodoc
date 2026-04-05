@@ -1,0 +1,41 @@
+---
+title: "Content Ownership"
+description: "The hard boundary between pure content repositories and the Topoo docs system."
+---
+Topoo uses a two-repo model:
+
+- `topoodoc` for the documentation system
+- `topoo-docs` for pure content
+
+## `topoodoc` Owns
+
+- docs shell
+- navigation shell
+- typography baseline
+- docs renderers
+- docs blocks
+- `TopooUI`
+- publishing pipeline
+
+## `topoo-docs` Owns
+
+- narrative documentation
+- project docs
+- agent docs
+- memory docs
+- work docs
+- metadata
+- ordering
+- links
+
+## Practical Test
+
+Ask one question:
+
+> Can this file change layout, spacing, typography, card structure, or final rendering behavior?
+
+If yes, it belongs in `topoodoc`.
+
+If no, and it only changes content, it can live in `topoo-docs`.
+
+This boundary exists to stop content publishing from accidentally changing the docs system itself.

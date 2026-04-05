@@ -1,0 +1,39 @@
+---
+title: "Renderer Contract"
+description: "The boundary between content data and the Topoo docs rendering layer."
+---
+Renderer contract means every schema type must map to a **system-owned renderer**.
+
+Content provides:
+
+- title
+- description
+- body copy
+- links
+- metadata
+- ordering
+
+The system provides:
+
+- page shell
+- typography baseline
+- docs block rendering
+- card layout
+- preview and code presentation
+- navigation structure
+
+## Contract Rule
+
+Content does not own final layout.
+
+The renderer does.
+
+That means a page author should not be able to change a page from a list into a grid, or from a dense index into a card landing, just by editing content files.
+
+## Current Goal
+
+Topoo docs should move toward a stable model where:
+
+- content repos stay text-first
+- system pages stay system-owned
+- every rendered page has a predictable visual baseline
