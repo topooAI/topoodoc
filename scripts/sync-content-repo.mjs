@@ -162,6 +162,7 @@ function renderDocsConfig(contentConfig, navLabelByUrl) {
   const showSearch = contentConfig.shell?.showSearch ?? true;
   const primaryNav = JSON.stringify(contentConfig.navigation?.primary ?? [{ href: "/docs", label: "Docs" }], null, 2);
   const navMap = JSON.stringify(navLabelByUrl, null, 2);
+  const sidebarSectionsByRoot = JSON.stringify(contentConfig.navigation?.sidebarSectionsByRoot ?? {}, null, 2);
 
   return `import type { DocsShellNavItem } from "@topoo/fumadocs-system";
 
@@ -178,6 +179,7 @@ export const docsSite = {
     navLabelByUrl: ${navMap},
     newHref: ${newHref},
     newLabel: ${newLabel},
+    sidebarSectionsByRoot: ${sidebarSectionsByRoot},
     primaryNav: ${primaryNav} satisfies DocsShellNavItem[],
     showGithubLink: ${showGithubLink},
     showSearch: ${showSearch},
@@ -233,8 +235,8 @@ if (hasContentModel) {
   const boardOrder = siteModel.boardOrder ?? blocksModel.map((block) => block.id);
   const systemOwnedBoards = new Set(siteModel.systemOwnedBoards ?? []);
   const blockById = new Map(blocksModel.map((block) => [block.id, block]));
-  const topicById = new Map(topicsModel.map((topic) => [topic.id, topic]));
   const pageById = new Map(pagesModel.map((page) => [page.id, page]));
+  const sidebarSectionsByRoot = {};
 
   for (const page of pagesModel) {
     const pagePath = path.join(contentRepoDir, page.file);
@@ -278,8 +280,11 @@ if (hasContentModel) {
 
     const blockTopics = topicsModel.filter((topic) => topic.blockId === block.id);
     const pages = [];
+    const sections = [];
 
     for (const topic of blockTopics) {
+      const sectionItems = [];
+
       for (const pageId of topic.pageIds ?? []) {
         const page = pageById.get(pageId);
         if (!page) {
@@ -295,6 +300,17 @@ if (hasContentModel) {
         }
 
         pages.push(pageKey || "index");
+        sectionItems.push({
+          href: page.href,
+          label: page.title,
+        });
+      }
+
+      if (sectionItems.length > 0) {
+        sections.push({
+          label: topic.label,
+          items: sectionItems,
+        });
       }
     }
 
@@ -302,6 +318,8 @@ if (hasContentModel) {
       title: block.label,
       pages,
     });
+
+    sidebarSectionsByRoot[block.href] = sections;
   }
 
   const existingPrimaryNav = contentConfig.navigation?.primary ?? [];
@@ -319,6 +337,7 @@ if (hasContentModel) {
       })),
       ...systemOwnedPrimaryNav,
     ],
+    sidebarSectionsByRoot,
   };
 }
 

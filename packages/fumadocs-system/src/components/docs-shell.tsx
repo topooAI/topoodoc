@@ -16,7 +16,7 @@ export type DocsShellNavItem = {
 
 type NavSection = {
   label: string;
-  items: DocsShellNavItem[];
+  items: readonly DocsShellNavItem[];
 };
 
 export type DocsShellProps = {
@@ -29,14 +29,15 @@ export type DocsShellProps = {
   navLabelByUrl?: Record<string, string>;
   newHref?: string;
   newLabel?: string;
-  primaryNav?: DocsShellNavItem[];
+  primaryNav?: readonly DocsShellNavItem[];
+  sidebarSectionsByRoot?: Record<string, readonly NavSection[]>;
   showGithubLink?: boolean;
   showPrimaryAction?: boolean;
   showSearch?: boolean;
   tree: PageTree | null;
 };
 
-const defaultPrimaryNav: DocsShellNavItem[] = [
+const defaultPrimaryNav: readonly DocsShellNavItem[] = [
   { href: "/docs", label: "Docs" },
   { href: "/docs/components", label: "Components" },
   { href: "/docs/components/card", label: "Blocks" },
@@ -174,7 +175,16 @@ function buildSidebarSections(
   tree: PageTree | null,
   labelByUrl: Record<string, string>,
   pathname: string,
+  sidebarSectionsByRoot: Record<string, readonly NavSection[]>,
 ): NavSection[] {
+  const matchedDataRoot = Object.keys(sidebarSectionsByRoot)
+    .sort((a, b) => b.length - a.length)
+    .find((href) => isActive(pathname, href));
+
+  if (matchedDataRoot) {
+    return [...(sidebarSectionsByRoot[matchedDataRoot] ?? [])];
+  }
+
   const nodes = tree?.children ?? [];
   const rootItems = nodes.flatMap((node) => {
     const item = toNavItem(node, labelByUrl);
@@ -237,13 +247,14 @@ export function DocsShell({
   newHref = "/create",
   newLabel = "New",
   primaryNav = defaultPrimaryNav,
+  sidebarSectionsByRoot = {},
   showGithubLink = true,
   showPrimaryAction = true,
   showSearch = true,
   tree,
 }: DocsShellProps) {
   const pathname = usePathname();
-  const sidebarSections = buildSidebarSections(tree, navLabelByUrl, pathname);
+  const sidebarSections = buildSidebarSections(tree, navLabelByUrl, pathname, sidebarSectionsByRoot);
 
   return (
     <div className="min-h-screen bg-background">

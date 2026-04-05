@@ -15,6 +15,7 @@ export default function DocsSectionLayout({ children }: { children: ReactNode })
       newHref={docsSite.shell.newHref}
       newLabel={docsSite.shell.newLabel}
       primaryNav={docsSite.shell.primaryNav}
+      sidebarSectionsByRoot={docsSite.shell.sidebarSectionsByRoot}
       showGithubLink={docsSite.shell.showGithubLink}
       showPrimaryAction={docsSite.shell.showPrimaryAction}
       showSearch={docsSite.shell.showSearch}
