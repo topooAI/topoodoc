@@ -117,6 +117,14 @@ async function collectAllFiles(dir, prefix = "") {
   return files;
 }
 
+async function collectRootDocDirs(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort((left, right) => left.localeCompare(right));
+}
+
 function renderDocsConfig(contentConfig, navLabelByUrl) {
   const metadataTitle = JSON.stringify(contentConfig.site?.title ?? "Docs");
   const metadataDescription = JSON.stringify(contentConfig.site?.description ?? "Documentation.");
@@ -186,6 +194,13 @@ try {
 } catch {
   // no system baseline content yet
 }
+
+const rootMetaPath = path.join(contentTargetDir, "meta.json");
+const rootMeta = JSON.parse(await readFile(rootMetaPath, "utf8"));
+const rootDirs = await collectRootDocDirs(contentTargetDir);
+const rootPages = rootDirs.filter((name) => name !== "index");
+rootMeta.pages = ["index", ...rootPages];
+await writeFile(rootMetaPath, `${JSON.stringify(rootMeta, null, 2)}\n`, "utf8");
 
 const contentConfig = JSON.parse(await readFile(contentConfigPath, "utf8"));
 const docFiles = await collectDocFiles(contentTargetDir);
