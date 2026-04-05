@@ -11,10 +11,6 @@
     "mcp",
     "registry",
     "forms",
-    "schema",
-    "renderer-contract",
-    "blocks",
-    "content-ownership",
     "changelog"
   ]
 }

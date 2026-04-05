@@ -10,7 +10,8 @@
     "content:sync": "node scripts/sync-content-repo.mjs",
     "content:watch": "node scripts/watch-content-repo.mjs",
     "content:dev": "node scripts/dev-content-site.mjs",
-    "content:build": "node scripts/sync-content-repo.mjs && pnpm --dir apps/content-site run build",
-    "content:deploy": "node scripts/sync-content-repo.mjs && pnpm --dir apps/content-site run deploy"
+    "content:verify-system": "node scripts/verify-system-baseline.mjs",
+    "content:build": "pnpm content:verify-system && node scripts/sync-content-repo.mjs && pnpm --dir apps/content-site run build",
+    "content:deploy": "pnpm content:verify-system && node scripts/sync-content-repo.mjs && pnpm --dir apps/content-site run deploy"
   }
 }
