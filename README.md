@@ -12,6 +12,9 @@ Topoo-styled documentation system for generating and publishing documentation si
 
 This repo owns the docs system, not customer content. Customer docs should live in separate pure content repositories.
 
+See:
+- `docs/REPO_BOUNDARY.md`
+
 ## Two Repo Model
 
 - `topoodoc`: system repo
@@ -74,3 +77,4 @@ pnpm import:docs /absolute/path/to/your/docs
 - generated docs sites use Next.js + Fumadocs
 - generated content repos stay pure and do not carry the app shell
 - system upgrades belong in `topoodoc`, not in customer content repos
+- `TopooUI` is system-owned, not content-owned
