@@ -271,7 +271,9 @@ async function buildSidebarSectionsByRoot({ boards, blocks, topics, docsDir }) {
     const boardBlocks = blocksByBoard.get(board.id) ?? [];
     const sections = boardBlocks
       .map((block) => {
-        const blockTopics = topicsByBlock.get(block.id) ?? [];
+        const blockTopics = [...(topicsByBlock.get(block.id) ?? [])].sort(
+          (left, right) => (left.order ?? Number.MAX_SAFE_INTEGER) - (right.order ?? Number.MAX_SAFE_INTEGER),
+        );
         const items = blockTopics.map((topic) => ({
           href: topic.href,
           label: topic.label,
