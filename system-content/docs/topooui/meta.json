@@ -2,6 +2,7 @@
   "title": "TopooUI",
   "pages": [
     "index",
+    "document",
     "components",
     "installation",
     "theming",

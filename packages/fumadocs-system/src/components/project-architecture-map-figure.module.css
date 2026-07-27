@@ -1,0 +1,202 @@
+.figureRoot {
+  margin-top: 1.5rem;
+}
+
+.expandable {
+  width: 100%;
+}
+
+.canvas {
+  width: 100%;
+  border: 1px solid #ece8e1;
+  border-radius: 24px;
+  background-color: #ffffff;
+  background-image: radial-gradient(circle at 1px 1px, rgba(24, 24, 27, 0.08) 1px, transparent 0);
+  background-size: 14px 14px;
+  padding: 20px;
+}
+
+.stack {
+  display: grid;
+  gap: 14px;
+}
+
+.pairGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.layerCard {
+  border: 1px solid #e7e2d9;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 16px 20px;
+}
+
+.layerHeader {
+  display: grid;
+  gap: 1px;
+}
+
+.layerTitle {
+  color: var(--foreground);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.layerSubtitle {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.layerBody {
+  margin-top: 12px;
+}
+
+.pillGrid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pillGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pillGrid5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pillGrid6 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.chainRow {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) auto
+    minmax(0, 1.15fr) auto
+    minmax(0, 0.9fr) auto
+    minmax(0, 0.8fr) auto
+    minmax(0, 1fr) auto
+    minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 8px;
+  width: 100%;
+}
+
+.chainItem {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.chainArrow {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 20px;
+  justify-self: center;
+}
+
+.chainPill {
+  width: 100%;
+}
+
+.subsection {
+  display: grid;
+  gap: 6px;
+}
+
+.subsectionTitle {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.subsectionStack {
+  display: grid;
+  gap: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  min-height: 36px;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--background);
+  padding: 6px 16px;
+  color: var(--foreground);
+  text-align: left;
+  font-size: 12px;
+  line-height: 15px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.pillLabel {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pillCompact {
+  min-height: 32px;
+  padding: 4px 14px;
+}
+
+.pillActive {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.modalBody {
+  max-width: 1480px;
+  padding: 24px 28px;
+}
+
+@media (min-width: 1280px) {
+  .pillGrid6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .pairGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pillGrid3,
+  .pillGrid5,
+  .pillGrid6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chainRow {
+    grid-template-columns:
+      minmax(0, 1fr) auto
+      minmax(0, 1fr) auto
+      minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,53 @@
+name: Validate Agent System Submission
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: system-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: integrated-docs-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout system candidate
+        uses: actions/checkout@v4
+        with:
+          path: system
+
+      - name: Checkout canonical content
+        uses: actions/checkout@v4
+        with:
+          repository: topooAI/topoo-docs
+          ref: main
+          path: content
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: system/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: system
+        run: pnpm install --frozen-lockfile
+
+      - name: Build integrated documentation candidate
+        working-directory: system
+        env:
+          TOPOODOC_CONTENT_REPO: ${{ github.workspace }}/content
+        run: pnpm content:build

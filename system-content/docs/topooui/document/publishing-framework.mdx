@@ -1,0 +1,155 @@
+---
+title: "Publishing Framework"
+description: "Defines the TopooUI-owned publication frameworks used by Topoo Book, Topoo Chatbox, and future Topoo products."
+---
+The publishing framework is a TopooUI responsibility.
+
+Topoo Book can validate the web-side framework, but it should not permanently own the framework.
+Topoo Chatbox can validate the desktop/app-side framework, but it should not permanently own that framework either.
+
+## Core rule
+
+**TopooUI defines the publishing frameworks. Products use them.**
+
+This keeps future products from copying shell code, navigation rules, spacing rules, and management page patterns into separate implementations.
+
+## Two publication frameworks
+
+Topoo has two product publication frameworks:
+
+- **Web publication framework:** browser-first product and management surfaces
+- **Desktop publication framework:** app-first runtime, chat, and execution surfaces
+
+These frameworks are sibling foundations inside TopooUI.
+They are not separate product features.
+
+## Web publication framework
+
+The web publication framework defines the shared structure for browser-side Topoo products.
+
+It owns:
+
+- top navigation
+- left sidebar
+- reading column
+- management content shell
+- registry pages
+- detail pages
+- table and card surfaces
+- project switcher patterns
+- document, protocol, and release page patterns
+- responsive behavior for web management surfaces
+
+Topoo Book is the first major validation surface for this framework.
+
+Examples of products that should use the web publication framework:
+
+- `book.topoo.ai`
+- `doc.topoo.ai`
+- future finance management systems
+- future AI trading management systems
+- prompt registry
+- protocol registry
+- release truth center
+
+## Desktop publication framework
+
+The desktop publication framework defines the shared structure for app-side Topoo products.
+
+It owns:
+
+- desktop app shell
+- chat and agent interaction surfaces
+- workflow surfaces
+- runtime-aware panels
+- execution controls
+- local app navigation
+- app-side management views
+
+Topoo Chatbox is the first major validation surface for this framework.
+
+## Product ownership
+
+Products should not own the framework layer.
+
+They should own their domain:
+
+- Topoo Book owns structured knowledge, project publication, prompt governance, and protocol surfaces
+- Topoo Chatbox owns app-side interaction and execution-facing workflows
+- toWeb owns website distribution, publishing operations, analytics, and site intelligence
+
+The shared shell, layout, and reusable page patterns belong in TopooUI.
+
+## Boundary with Topoo Book
+
+Topoo Book is not the framework itself.
+
+Topoo Book is a product built on the TopooUI web publication framework.
+It should use the framework to manage:
+
+- Book platform pages
+- managed project pages
+- document pages
+- prompt and protocol pages
+- release truth pages
+
+When a pattern becomes reusable across multiple web-side products, it must move back into TopooUI.
+
+## Boundary with toWeb
+
+Topoo Book and toWeb both touch web publication, but they own different questions.
+
+Topoo Book answers:
+
+- what is the structured knowledge?
+- what is the current prompt truth?
+- what protocol is active?
+- which project documentation is official?
+- what web management surface should expose this truth?
+
+toWeb answers:
+
+- how is this website distributed?
+- how is traffic performing?
+- how is SEO performing?
+- which pages convert?
+- how are external web properties published and analyzed?
+
+In short:
+
+- **Topoo Book owns meaning and management surfaces**
+- **toWeb owns distribution and analytics**
+
+## Implementation rule
+
+Do not copy a shell from one product to another as a one-off.
+
+The correct path is:
+
+1. validate the shell in one product
+2. extract the stable structure into TopooUI
+3. reuse the extracted framework in the next product
+
+This applies to:
+
+- topbar
+- sidebar
+- page width
+- navigation state
+- registry pages
+- detail pages
+- management tables
+- document reading pages
+- protocol and release panels
+
+## Current direction
+
+The current direction is:
+
+- `P21 / Topoo Chatbox` validates the desktop/app publication framework
+- `P31 / Topoo Book` validates the web publication framework
+- TopooUI owns the extracted framework definitions and reusable components
+
+The product relationship can be summarized as:
+
+**Chatbox for desktop/app surfaces. Book for web/admin surfaces. TopooUI owns the frameworks.**

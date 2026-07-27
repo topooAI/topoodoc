@@ -1,0 +1,310 @@
+---
+title: "Typography"
+description: "Actual type scale, paragraph rhythm, emphasis rules, and prose standards extracted from the current Topoo documentation system."
+---
+Typography in Topoo docs is a fixed reading system extracted from the current live implementation.
+
+## Base font stack
+
+- Sans stack: `Geist Variable`, `Geist`, `ui-sans-serif`, `system-ui`, `sans-serif`
+- Mono stack: `ui-monospace`, `SFMono-Regular`, `Menlo`, `Monaco`, `Consolas`, `Liberation Mono`, `Courier New`, `monospace`
+
+## Preview + spec
+
+Top-level docs pages use a clear title, then a muted description. This is the first reading anchor.
+
+<Tabs defaultValue="preview-title">
+  <TabsList>
+    <TabsTrigger value="preview-title">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-title">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-title">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-[280px]"
+      sourceCode={`{
+  "title": "text-3xl / font-semibold / tracking-tight",
+  "description": "text-base / muted foreground / max-width 80%"
+}`}
+    >
+      <div className="w-full max-w-xl rounded-xl bg-background p-8 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <div className="grid gap-2">
+        <div className="text-3xl font-semibold tracking-tight text-foreground">Typography</div>
+        <p className="max-w-[80%] text-base text-muted-foreground">
+          Type scale, paragraph rhythm, emphasis rules, and readable prose standards for the Topoo documentation system.
+        </p>
+      </div>
+      </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-title">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "title": "text-3xl / font-semibold / tracking-tight",
+  "description": "text-base / muted foreground / max-width 80%"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Page headers establish reading priority in two steps.",
+  "rules": [
+    "Title is the strongest reading anchor.",
+    "Description stays visually quieter and shorter than the title.",
+    "This pattern is shared across board home and topic pages."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+Body prose is denser than stock Tailwind prose. The goal is readable structure with stable rhythm.
+
+<Tabs defaultValue="preview-body">
+  <TabsList>
+    <TabsTrigger value="preview-body">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-body">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-body">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-[240px]"
+      sourceCode={`{
+  "fontSize": "15px",
+  "lineHeight": "24.375px",
+  "paragraphGap": "p + p = 1rem"
+}`}
+    >
+      <div className="w-full max-w-xl rounded-xl bg-background p-8 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <div className="max-w-[40rem] text-[15px] leading-[24.375px] text-foreground">
+        Topoo documentation pages prioritize density without losing readability. Paragraphs carry the same rhythm across
+        product, execution, memory, and UI references.
+      </div>
+      </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-body">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "fontSize": "15px",
+  "lineHeight": "24.375px",
+  "paragraphGap": "p + p = 1rem"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Body prose stays compact enough for dense documentation without collapsing into caption text.",
+  "rules": [
+    "Paragraph size and line-height stay stable across boards.",
+    "Paragraph-to-paragraph rhythm is controlled by a fixed gap.",
+    "Readable density matters more than decorative whitespace."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+Section headings step down in a controlled scale instead of jumping between unrelated sizes.
+
+<Tabs defaultValue="preview-headings">
+  <TabsList>
+    <TabsTrigger value="preview-headings">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-headings">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-headings">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-[280px]"
+      sourceCode={`{
+  "h2": "20px / 28px / 500 / -0.5px / margin-top 3rem",
+  "h3": "18px / 28px / 500 / -0.45px / margin-top 2rem",
+  "step": "text-lg / font-medium / tracking -0.45px"
+}`}
+    >
+      <div className="w-full max-w-xl rounded-xl border bg-background p-8 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <div className="grid gap-6">
+        <div className="text-[20px] leading-[28px] font-medium tracking-[-0.5px] text-foreground">Heading level h2</div>
+        <div className="text-[18px] leading-[28px] font-medium tracking-[-0.45px] text-foreground">Heading level h3</div>
+        <div className="text-lg font-medium tracking-[-0.45px] text-foreground">Step heading</div>
+      </div>
+      </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-headings">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperClassName="bg-muted/25"
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "h2": "20px / 28px / 500 / -0.5px / margin-top 3rem",
+  "h3": "18px / 28px / 500 / -0.45px / margin-top 2rem",
+  "step": "text-lg / font-medium / tracking -0.45px"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Heading levels step down gradually so hierarchy can be scanned without unrelated size jumps.",
+  "rules": [
+    "h2 owns major section breaks.",
+    "h3 owns substructure within a section.",
+    "Step headings keep the same tone as task-oriented subheaders."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+Lists keep the same reading density as paragraph text instead of shrinking into caption-sized content.
+
+<Tabs defaultValue="preview-lists">
+  <TabsList>
+    <TabsTrigger value="preview-lists">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-lists">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-lists">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-[260px]"
+      sourceCode={`{
+  "listTopMargin": "1rem",
+  "leftIndent": "1.25rem",
+  "itemSize": "15px / 24.375px",
+  "itemGap": "li + li = 0.5rem"
+}`}
+    >
+      <div className="w-full max-w-xl rounded-xl border bg-background p-8 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <ul className="ml-5 list-disc text-[15px] leading-[24.375px] text-foreground">
+        <li>Left indent is fixed for readable scanning.</li>
+        <li className="mt-2">Each following item keeps a 0.5rem vertical gap.</li>
+        <li className="mt-2">Lists sit on the same rhythm as paragraphs.</li>
+      </ul>
+      </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-lists">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "listTopMargin": "1rem",
+  "leftIndent": "1.25rem",
+  "itemSize": "15px / 24.375px",
+  "itemGap": "li + li = 0.5rem"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Lists stay inside the same reading rhythm instead of becoming annotation text.",
+  "rules": [
+    "Use the same density as paragraphs.",
+    "Keep indentation consistent so scanning stays predictable.",
+    "Use item spacing to separate steps without breaking rhythm."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+Inline code is tighter than body prose so it reads as an annotation, not as a second paragraph style.
+
+<Tabs defaultValue="preview-inline">
+  <TabsList>
+    <TabsTrigger value="preview-inline">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-inline">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-inline">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-[240px]"
+      sourceCode={`{
+  "inlineCode": "12.8px / 20.8px / radius 8px / padding 0.2rem 0.35rem",
+  "strong": "font-weight 600",
+  "link": "underline / underline-offset 0.2em"
+}`}
+    >
+      <div className="w-full max-w-xl rounded-xl border bg-background p-8 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <p className="text-[15px] leading-[24.375px] text-foreground">
+        Use <code>board</code>, <code>block</code>, <code>topic</code>, and <code>page</code> as the canonical content
+        model. Use <strong>bold</strong> for emphasis and keep links readable.
+      </p>
+      </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-inline">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "inlineCode": "12.8px / 20.8px / radius 8px / padding 0.2rem 0.35rem",
+  "strong": "font-weight 600",
+  "link": "underline / underline-offset 0.2em"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Inline emphasis stays compact and supportive instead of dominating the reading rhythm.",
+  "rules": [
+    "Inline code reads as annotation.",
+    "Strong emphasis marks important terms only.",
+    "Links stay recognizable without becoming louder than the sentence."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+## Typography owns
+
+- heading scale
+- paragraph size and line-height
+- list spacing
+- inline code density
+- prose rhythm
+- readable emphasis
+
+## Typography does not own
+
+- board/block/topic/page structure
+- page routing
+- sidebar taxonomy
+- preview component behavior
+- overview grid composition
+
+Those belong to schema, renderer contract, and layout rules.

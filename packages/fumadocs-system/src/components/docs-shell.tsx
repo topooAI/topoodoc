@@ -16,7 +16,7 @@ export type DocsShellNavItem = {
 
 type NavSection = {
   label: string;
-  items: DocsShellNavItem[];
+  items: readonly DocsShellNavItem[];
 };
 
 export type DocsShellProps = {
@@ -27,6 +27,7 @@ export type DocsShellProps = {
   homeAriaLabel?: string;
   homeHref?: string;
   navLabelByUrl?: Record<string, string>;
+  sidebarSectionsByRoot?: Record<string, readonly NavSection[]>;
   newHref?: string;
   newLabel?: string;
   primaryNav?: DocsShellNavItem[];
@@ -174,7 +175,19 @@ function buildSidebarSections(
   tree: PageTree | null,
   labelByUrl: Record<string, string>,
   pathname: string,
-): NavSection[] {
+  sidebarSectionsByRoot: Record<string, readonly NavSection[]>,
+): readonly NavSection[] {
+  const rootKey = pathname === "/docs"
+    ? "topoo"
+    : pathname.startsWith("/docs/")
+      ? pathname.split("/")[2] ?? "topoo"
+      : "topoo";
+
+  const configuredSections = sidebarSectionsByRoot[rootKey];
+  if (configuredSections?.length) {
+    return configuredSections;
+  }
+
   const nodes = tree?.children ?? [];
   const rootItems = nodes.flatMap((node) => {
     const item = toNavItem(node, labelByUrl);
@@ -234,6 +247,7 @@ export function DocsShell({
   homeAriaLabel = "Docs home",
   homeHref = "/docs",
   navLabelByUrl = defaultNavLabelByUrl,
+  sidebarSectionsByRoot = {},
   newHref = "/create",
   newLabel = "New",
   primaryNav = defaultPrimaryNav,
@@ -243,7 +257,7 @@ export function DocsShell({
   tree,
 }: DocsShellProps) {
   const pathname = usePathname();
-  const sidebarSections = buildSidebarSections(tree, navLabelByUrl, pathname);
+  const sidebarSections = buildSidebarSections(tree, navLabelByUrl, pathname, sidebarSectionsByRoot);
 
   return (
     <div className="min-h-screen bg-background">

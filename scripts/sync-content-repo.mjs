@@ -125,6 +125,73 @@ async function collectRootDocDirs(dir) {
     .sort((left, right) => left.localeCompare(right));
 }
 
+function docsUrlFromDir(relativeDir) {
+  const normalized = relativeDir.replace(/\\/g, "/");
+  return normalized ? `/docs/${normalized}` : "/docs";
+}
+
+async function buildSectionsFromMetaTree(rootName, docsDir) {
+  const rootDir = path.join(docsDir, rootName);
+  const rootMetaPath = path.join(rootDir, "meta.json");
+  const rootMeta = await readJsonIfExists(rootMetaPath, null);
+
+  if (!rootMeta?.pages) {
+    return [];
+  }
+
+  const sections = [];
+  const rootItems = [];
+
+  for (const page of rootMeta.pages) {
+    if (page === "index") {
+      continue;
+    }
+
+    const sectionDir = path.join(rootDir, page);
+    const sectionMeta = await readJsonIfExists(path.join(sectionDir, "meta.json"), null);
+
+    if (sectionMeta?.pages) {
+      const items = sectionMeta.pages
+        .filter((entry) => entry !== "index")
+        .map((entry) => {
+          const href = entry === "index"
+            ? docsUrlFromDir(`${rootName}/${page}`)
+            : docsUrlFromDir(`${rootName}/${page}/${entry}`);
+          return {
+            href,
+            label: titleFromSlug(entry),
+          };
+        });
+
+      sections.push({
+        label: sectionMeta.title ?? titleFromSlug(page),
+        items: [
+          {
+            href: docsUrlFromDir(`${rootName}/${page}`),
+            label: sectionMeta.title ?? titleFromSlug(page),
+          },
+          ...items,
+        ],
+      });
+      continue;
+    }
+
+    rootItems.push({
+      href: docsUrlFromDir(`${rootName}/${page}`),
+      label: titleFromSlug(page),
+    });
+  }
+
+  if (rootItems.length > 0) {
+    sections.unshift({
+      label: rootMeta.title ?? titleFromSlug(rootName),
+      items: rootItems,
+    });
+  }
+
+  return sections;
+}
+
 function renderDocsConfig(contentConfig, navLabelByUrl) {
   const metadataTitle = JSON.stringify(contentConfig.site?.title ?? "Docs");
   const metadataDescription = JSON.stringify(contentConfig.site?.description ?? "Documentation.");
@@ -139,6 +206,7 @@ function renderDocsConfig(contentConfig, navLabelByUrl) {
   const showSearch = contentConfig.shell?.showSearch ?? true;
   const primaryNav = JSON.stringify(contentConfig.navigation?.primary ?? [{ href: "/docs", label: "Docs" }], null, 2);
   const navMap = JSON.stringify(navLabelByUrl, null, 2);
+  const sidebarSectionsByRoot = JSON.stringify(contentConfig.navigation?.sidebarSectionsByRoot ?? {}, null, 2);
 
   return `import type { DocsShellNavItem } from "@topoo/fumadocs-system";
 
@@ -153,6 +221,7 @@ export const docsSite = {
     homeAriaLabel: ${homeAriaLabel},
     homeHref: ${homeHref},
     navLabelByUrl: ${navMap},
+    sidebarSectionsByRoot: ${sidebarSectionsByRoot},
     newHref: ${newHref},
     newLabel: ${newLabel},
     primaryNav: ${primaryNav} satisfies DocsShellNavItem[],
@@ -164,6 +233,76 @@ export const docsSite = {
 `;
 }
 
+async function readJsonIfExists(filePath, fallback) {
+  try {
+    return JSON.parse(await readFile(filePath, "utf8"));
+  } catch {
+    return fallback;
+  }
+}
+
+async function buildSidebarSectionsByRoot({ boards, blocks, topics, docsDir }) {
+  const topicsByBlock = new Map();
+  for (const topic of topics) {
+    const list = topicsByBlock.get(topic.blockId) ?? [];
+    list.push(topic);
+    topicsByBlock.set(topic.blockId, list);
+  }
+
+  const blocksByBoard = new Map();
+  for (const block of blocks) {
+    const list = blocksByBoard.get(block.boardId) ?? [];
+    list.push(block);
+    blocksByBoard.set(block.boardId, list);
+  }
+
+  const result = {};
+
+  for (const board of boards) {
+    if (!board?.id) {
+      continue;
+    }
+
+    if (board.id === "topooui") {
+      result[board.id] = await buildSectionsFromMetaTree(board.id, docsDir);
+      continue;
+    }
+
+    const boardBlocks = blocksByBoard.get(board.id) ?? [];
+    const sections = boardBlocks
+      .map((block) => {
+        const blockTopics = topicsByBlock.get(block.id) ?? [];
+        const items = blockTopics.map((topic) => ({
+          href: topic.href,
+          label: topic.label,
+        }));
+
+        if (items.length === 0) {
+          return null;
+        }
+
+        return {
+          label: block.label,
+          items,
+        };
+      })
+      .filter(Boolean);
+
+    if (sections.length > 0) {
+      result[board.id] = sections;
+    }
+  }
+
+  if (!result.topooui) {
+    const topoouiSections = await buildSectionsFromMetaTree("topooui", docsDir);
+    if (topoouiSections.length > 0) {
+      result.topooui = topoouiSections;
+    }
+  }
+
+  return result;
+}
+
 const args = parseArgs(process.argv.slice(2));
 const contentRepoDir = path.resolve(rootDir, args.content ?? process.env.TOPOODOC_CONTENT_REPO ?? "../topoo-docs");
 const siteDir = path.resolve(rootDir, args.site ?? "apps/content-site");
@@ -173,6 +312,7 @@ const systemContentDir = path.join(rootDir, "system-content/docs");
 const systemOwnedRoots = ["topooui"];
 const contentConfigPath = path.join(contentRepoDir, "topoodoc.content.json");
 const docsConfigPath = path.join(siteDir, "docs.config.ts");
+const contentModelDir = path.join(contentRepoDir, "content-model");
 
 await rm(contentTargetDir, { recursive: true, force: true });
 await mkdir(path.dirname(contentTargetDir), { recursive: true });
@@ -203,6 +343,16 @@ rootMeta.pages = ["index", ...rootPages];
 await writeFile(rootMetaPath, `${JSON.stringify(rootMeta, null, 2)}\n`, "utf8");
 
 const contentConfig = JSON.parse(await readFile(contentConfigPath, "utf8"));
+const boards = await readJsonIfExists(path.join(contentModelDir, "boards.json"), []);
+const blocks = await readJsonIfExists(path.join(contentModelDir, "blocks.json"), []);
+const topics = await readJsonIfExists(path.join(contentModelDir, "topics.json"), []);
+contentConfig.navigation = contentConfig.navigation ?? {};
+contentConfig.navigation.sidebarSectionsByRoot = await buildSidebarSectionsByRoot({
+  boards,
+  blocks,
+  topics,
+  docsDir: contentTargetDir,
+});
 const docFiles = await collectDocFiles(contentTargetDir);
 const navLabelByUrl = {};
 

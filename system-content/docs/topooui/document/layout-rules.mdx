@@ -1,0 +1,406 @@
+---
+title: "Layout Rules"
+description: "Actual page spacing, content width, card placement, sidebar relationships, and shell rules extracted from the current Topoo documentation system."
+---
+Layout rules define where documentation blocks live on the page in the current live shell.
+
+## Preview + spec
+
+The documentation shell always reads as one page frame: top navigation across the board, left topic rail, center reading column, and right page TOC rail.
+
+<Tabs defaultValue="preview-shell">
+  <TabsList>
+    <TabsTrigger value="preview-shell">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-shell">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-shell">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-auto min-h-[420px]"
+      sourceCode={`{
+  "topNavigation": "board switcher across the full page width",
+  "sidebarWidth": "224px",
+  "contentGrid": "sidebar + main column + toc rail",
+  "tocRail": "16rem",
+  "contentMaxWidth": "40rem"
+}`}
+    >
+    <div className="w-full max-w-4xl rounded-xl border bg-surface p-4 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <svg
+        viewBox="0 0 900 420"
+        className="h-auto w-full"
+        role="img"
+        aria-label="Documentation shell layout"
+      >
+        <rect x="16" y="16" width="868" height="388" rx="20" fill="var(--background)" stroke="var(--border)" />
+        <rect x="16" y="16" width="868" height="52" rx="20" fill="var(--muted)" />
+        <circle cx="42" cy="42" r="4" fill="var(--foreground)" opacity="0.65" />
+        <rect x="72" y="33" width="56" height="10" rx="5" fill="var(--foreground)" opacity="0.32" />
+        <rect x="144" y="33" width="58" height="10" rx="5" fill="var(--foreground)" opacity="0.22" />
+        <rect x="218" y="33" width="58" height="10" rx="5" fill="var(--foreground)" opacity="0.22" />
+        <rect x="292" y="33" width="68" height="10" rx="5" fill="var(--foreground)" opacity="0.22" />
+        <rect x="376" y="33" width="64" height="10" rx="5" fill="var(--foreground)" opacity="0.22" />
+        <rect x="456" y="33" width="62" height="10" rx="5" fill="var(--foreground)" opacity="0.22" />
+        <rect x="794" y="31" width="14" height="14" rx="7" fill="var(--foreground)" opacity="0.18" />
+        <rect x="820" y="31" width="14" height="14" rx="7" fill="var(--foreground)" opacity="0.18" />
+        <rect x="846" y="31" width="14" height="14" rx="7" fill="var(--foreground)" opacity="0.18" />
+
+        <rect x="36" y="92" width="160" height="282" rx="16" fill="var(--surface)" />
+        <text
+          x="56"
+          y="122"
+          fontSize="16"
+          fill="var(--muted-foreground)"
+          dominantBaseline="hanging"
+        >
+          Left topic rail
+        </text>
+        <rect x="56" y="142" width="62" height="10" rx="5" fill="var(--foreground)" opacity="0.18" />
+        <rect x="56" y="176" width="78" height="28" rx="8" fill="var(--accent)" />
+        <text
+          x="72"
+          y="187"
+          fontSize="12"
+          fill="var(--accent-foreground)"
+          dominantBaseline="middle"
+        >
+          Active topic
+        </text>
+        <rect x="56" y="220" width="92" height="10" rx="5" fill="var(--foreground)" opacity="0.4" />
+        <rect x="56" y="246" width="84" height="10" rx="5" fill="var(--foreground)" opacity="0.4" />
+        <rect x="56" y="272" width="106" height="10" rx="5" fill="var(--foreground)" opacity="0.4" />
+
+        <rect x="228" y="92" width="454" height="282" rx="16" fill="var(--background)" stroke="var(--border)" />
+        <text x="256" y="130" fontSize="22" fontWeight="600" fill="var(--foreground)">Main reading column</text>
+        <rect x="256" y="144" width="208" height="10" rx="5" fill="var(--foreground)" opacity="0.2" />
+        <rect x="256" y="184" width="362" height="10" rx="5" fill="var(--foreground)" opacity="0.12" />
+        <rect x="256" y="204" width="332" height="10" rx="5" fill="var(--foreground)" opacity="0.12" />
+        <rect x="256" y="224" width="348" height="10" rx="5" fill="var(--foreground)" opacity="0.12" />
+        <rect x="256" y="266" width="120" height="10" rx="5" fill="var(--foreground)" opacity="0.16" />
+        <rect x="256" y="292" width="286" height="10" rx="5" fill="var(--foreground)" opacity="0.12" />
+        <rect x="256" y="312" width="310" height="10" rx="5" fill="var(--foreground)" opacity="0.12" />
+
+        <rect x="714" y="92" width="150" height="210" rx="16" fill="var(--surface)" />
+        <text
+          x="736"
+          y="122"
+          fontSize="16"
+          fill="var(--muted-foreground)"
+          dominantBaseline="hanging"
+        >
+          Right page TOC
+        </text>
+        <rect x="736" y="148" width="84" height="10" rx="5" fill="var(--foreground)" opacity="0.28" />
+        <rect x="736" y="172" width="98" height="10" rx="5" fill="var(--foreground)" opacity="0.2" />
+        <rect x="736" y="196" width="72" height="10" rx="5" fill="var(--foreground)" opacity="0.2" />
+        <rect x="736" y="232" width="92" height="32" rx="10" fill="var(--background)" stroke="var(--border)" />
+        <text
+          x="782"
+          y="248"
+          fontSize="12"
+          fill="var(--foreground)"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
+          Helper card
+        </text>
+      </svg>
+    </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-shell">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "topNavigation": "board switcher across the full page width",
+  "sidebarWidth": "224px",
+  "contentGrid": "sidebar + main column + toc rail",
+  "tocRail": "16rem",
+  "contentMaxWidth": "40rem"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Shell layout is fixed at the page level.",
+  "rules": [
+    "Content may fill the center reading column only.",
+    "Page body blocks must not simulate sidebar, top navigation, or right rail.",
+    "Width rules belong to the shell contract, not page content.",
+    "Overview grids and framework cards stay separate shells."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+Topic pages keep a tall airy shell so the content does not collapse against the header.
+
+<Tabs defaultValue="preview-topic-shell">
+  <TabsList>
+    <TabsTrigger value="preview-topic-shell">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-topic-shell">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-topic-shell">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="h-auto min-h-[360px]"
+      sourceCode={`{
+  "outerPadding": "px-4",
+  "topPadding": "pt-10",
+  "largeTopPadding": "lg:pt-12",
+  "bodyBottom": "pb-6",
+  "proseBottom": "pb-16"
+}`}
+    >
+    <div className="w-full max-w-4xl rounded-xl border bg-surface p-4 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <svg
+        viewBox="0 0 900 360"
+        className="h-auto w-full"
+        role="img"
+        aria-label="Topic page vertical spacing"
+      >
+        <rect x="18" y="18" width="864" height="324" rx="20" fill="var(--background)" stroke="var(--border)" />
+
+        <rect x="72" y="54" width="190" height="14" rx="7" fill="var(--foreground)" opacity="0.15" />
+        <text x="72" y="44" fontSize="12" fill="var(--muted-foreground)">Header offset zone</text>
+
+        <text x="72" y="114" fontSize="30" fontWeight="600" fill="var(--foreground)">Topic page title</text>
+        <rect x="72" y="132" width="420" height="10" rx="5" fill="var(--foreground)" opacity="0.14" />
+        <rect x="72" y="150" width="380" height="10" rx="5" fill="var(--foreground)" opacity="0.14" />
+
+        <text x="72" y="196" fontSize="12" fill="var(--muted-foreground)">Body content starts here</text>
+        <rect x="72" y="214" width="540" height="12" rx="6" fill="var(--foreground)" opacity="0.12" />
+        <rect x="72" y="238" width="500" height="12" rx="6" fill="var(--foreground)" opacity="0.12" />
+        <rect x="72" y="262" width="520" height="12" rx="6" fill="var(--foreground)" opacity="0.12" />
+
+        <rect x="72" y="296" width="250" height="10" rx="5" fill="var(--foreground)" opacity="0.08" />
+        <text x="72" y="328" fontSize="12" fill="var(--muted-foreground)">Bottom breathing room before the next section</text>
+      </svg>
+    </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-topic-shell">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperStyle={{ backgroundColor: "#f5f5f5" }}
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "outerPadding": "px-4",
+  "topPadding": "pt-10",
+  "largeTopPadding": "lg:pt-12",
+  "bodyBottom": "pb-6",
+  "proseBottom": "pb-16"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Topic pages keep a tall airy shell so dense content does not collide with the shell header.",
+  "rules": [
+    "The first dense content block begins after the documented top offset.",
+    "Bottom spacing is preserved so pages do not end abruptly.",
+    "This spacing contract applies to prose, rule, and component reference pages."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+Board home pages use overview card grids instead of long list pages.
+
+<Tabs defaultValue="preview-board-grid">
+  <TabsList>
+    <TabsTrigger value="preview-board-grid">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-board-grid">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-board-grid">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperClassName="bg-muted/25"
+      previewClassName="h-[260px]"
+      sourceCode={`{
+  "containerSpacing": "mt-6",
+  "gridGap": "1rem",
+  "smallBreakpoint": "sm:grid-cols-2",
+  "xlBreakpoint": "xl:grid-cols-3"
+}`}
+    >
+    <div className="mt-6 grid w-full max-w-4xl gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="min-h-[132px] rounded-xl border bg-background p-6 text-sm">Board card</div>
+      <div className="min-h-[132px] rounded-xl border bg-background p-6 text-sm">Board card</div>
+      <div className="min-h-[132px] rounded-xl border bg-background p-6 text-sm">Board card</div>
+    </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-board-grid">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      rawPreview
+      previewWrapperClassName="bg-muted/25"
+      previewClassName="bg-transparent"
+      sourceCode={`{
+  "containerSpacing": "mt-6",
+  "gridGap": "1rem",
+  "smallBreakpoint": "sm:grid-cols-2",
+  "xlBreakpoint": "xl:grid-cols-3"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Board home pages are overview surfaces, not long-form article pages.",
+  "rules": [
+    "Use overview cards to route into topics or adjacent boards.",
+    "Long explanations belong below the grid or inside topic pages.",
+    "Board cards stay scannable first and descriptive second."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+The system uses different shells for overview cards and framework cards. They should not be mixed.
+
+<Tabs defaultValue="preview-card-shells">
+  <TabsList>
+    <TabsTrigger value="preview-card-shells">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-card-shells">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-card-shells">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperClassName="bg-muted/25"
+      previewClassName="h-[260px]"
+      sourceCode={`{
+  "overviewCard": "rounded-xl / border / bg-background / p-6 / min-height 132px",
+  "frameworkCard": "rounded-xl / bg-surface / p-6 / sm:p-10 / centered content"
+}`}
+    >
+      <div className="grid w-full max-w-4xl gap-4 md:grid-cols-2">
+      <div className="min-h-[132px] rounded-xl border bg-background p-6 text-sm">Standard overview card</div>
+      <div className="rounded-xl bg-surface p-6 text-sm sm:p-10">Framework / installation card</div>
+      </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-card-shells">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      previewWrapperClassName="bg-muted/25"
+      previewClassName="h-[260px] items-stretch bg-transparent p-0"
+      sourceCode={`{
+  "overviewCard": "rounded-xl / border / bg-background / p-6 / min-height 132px",
+  "frameworkCard": "rounded-xl / bg-surface / p-6 / sm:p-10 / centered content"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Overview cards and framework cards solve two different routing jobs.",
+  "rules": [
+    "Overview cards are neutral navigation blocks for board/topic discovery.",
+    "Framework cards are reserved for installation and path-selection flows.",
+    "A page may contain both concepts, but in separate sections with clear intent."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+The visual language is already established: muted block label, denser topic links, accent highlight on the active page.
+
+<Tabs defaultValue="preview-sidebar-language">
+  <TabsList>
+    <TabsTrigger value="preview-sidebar-language">Preview</TabsTrigger>
+    <TabsTrigger value="protocol-sidebar-language">Protocol</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview-sidebar-language">
+    <ComponentPreview
+      align="center"
+      codeClassName="bg-background"
+      previewWrapperClassName="bg-muted/25"
+      previewClassName="h-[260px] bg-transparent"
+      sourceCode={`{
+  "sidebarStickiness": "top: calc(var(--header-height) + 0.6rem)",
+  "sidebarWidth": "w-56",
+  "blockLabel": "text-xs / font-medium / foreground 52%",
+  "topicLink": "text-[0.8rem] / font-medium / foreground 82%",
+  "activeTopic": "accent background + border + full foreground"
+}`}
+    >
+    <div className="w-full max-w-xl rounded-xl border bg-surface p-4 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <div className="px-2 text-xs font-medium text-foreground/52">Document</div>
+      <div className="mt-2 flex flex-col gap-1">
+        <div className="inline-flex h-[30px] w-fit items-center rounded-md bg-accent px-2 text-[0.8rem] font-medium text-foreground">
+          Typography
+        </div>
+        <div className="inline-flex h-[30px] w-fit items-center rounded-md px-2 text-[0.8rem] font-medium text-foreground/82">
+          Layout Rules
+        </div>
+      </div>
+    </div>
+    </ComponentPreview>
+  </TabsContent>
+  <TabsContent value="protocol-sidebar-language">
+    <ComponentPreview
+      align="start"
+      hideCode
+      codeClassName="bg-background"
+      previewClassName="h-[260px] items-stretch bg-muted/25 p-0"
+      sourceCode={`{
+  "sidebarStickiness": "top: calc(var(--header-height) + 0.6rem)",
+  "sidebarWidth": "w-56",
+  "blockLabel": "text-xs / font-medium / foreground 52%",
+  "topicLink": "text-[0.8rem] / font-medium / foreground 82%",
+  "activeTopic": "accent background + border + full foreground"
+}`}
+    >
+      <ProtocolCode
+        code={`{
+  "intent": "Sidebar language reads in two layers: block orientation first, topic destination second.",
+  "rules": [
+    "Block labels provide section orientation and stay visually muted.",
+    "Topic links stay denser than page body text so the sidebar can hold many entries without noise.",
+    "Active topic state uses the accent surface, not just text weight."
+  ]
+}`}
+      />
+    </ComponentPreview>
+  </TabsContent>
+</Tabs>
+
+## Layout owns
+
+- shell grid
+- column widths
+- sidebar placement
+- TOC placement
+- card grid spacing
+- preview/code placement
+
+## Layout does not own
+
+- topic naming
+- content semantics
+- typography values
+- schema hierarchy
+
+Those are handled by content model, renderer contract, and typography.

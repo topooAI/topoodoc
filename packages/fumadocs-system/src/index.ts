@@ -1,6 +1,7 @@
 export { DocsBrand } from "./components/docs-brand";
 export { DocsCopyPage } from "./components/docs-copy-page";
-export { Callout, LinkedCard, Steps, Step, Accordion, AccordionItem, AccordionTrigger, AccordionContent, CodeCollapsibleWrapper, PackageTabs, CopyButton } from "./components/docs-mdx";
+export { Callout, LinkedCard, Steps, Step, Accordion, AccordionItem, AccordionTrigger, AccordionContent, ArchitectureMap, CodeCollapsibleWrapper, PackageTabs, CopyButton, SpecPreview, SpecExample, SpecSheet, SpecRow, SpecCaption, SpecProtocol, ProtocolCode } from "./components/docs-mdx";
+export { ProjectArchitectureMapFigure } from "./components/project-architecture-map-figure";
 export { DocsRootLayout } from "./components/docs-root-layout";
 export { DocsShell, type DocsShellNavItem, type DocsShellProps } from "./components/docs-shell";
 export { DocsTableOfContents } from "./components/docs-table-of-contents";

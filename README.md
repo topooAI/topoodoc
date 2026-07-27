@@ -1,5 +1,9 @@
 # topoodoc
 
+See also:
+- [Doc System Contract](./docs/DOC_SYSTEM_CONTRACT.md)
+- [Content Repo Contract](./docs/CONTENT_REPO_CONTRACT.md)
+
 Topoo-styled documentation system for generating and publishing documentation sites from pure content repositories.
 
 ## What This Repo Contains

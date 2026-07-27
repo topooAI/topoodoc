@@ -20,6 +20,7 @@ function trimCode(code: string, maxLines?: number) {
 
 export async function ComponentSource({
   className,
+  code: explicitCode,
   collapsible = true,
   language,
   maxLines,
@@ -29,6 +30,7 @@ export async function ComponentSource({
   title,
 }: {
   className?: string;
+  code?: string;
   collapsible?: boolean;
   language?: string;
   maxLines?: number;
@@ -39,16 +41,18 @@ export async function ComponentSource({
 }) {
   const filePath = src ? path.join(shadcnRoot, src) : name ? getRegistrySourcePath(name, styleName) : null;
 
-  if (!filePath) {
+  if (!filePath && !explicitCode) {
     return null;
   }
 
-  let code = "";
+  let code = explicitCode ?? "";
 
-  try {
-    code = await readFile(filePath, "utf8");
-  } catch {
-    return null;
+  if (!code && filePath) {
+    try {
+      code = await readFile(filePath, "utf8");
+    } catch {
+      return null;
+    }
   }
 
   const renderedCode = trimCode(code, maxLines);

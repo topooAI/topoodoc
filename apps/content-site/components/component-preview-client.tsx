@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/docs-mdx";
 import { cn } from "@/lib/utils";
@@ -295,13 +296,52 @@ function RtlPreviewHeader({
   );
 }
 
-function renderCodeFigure(code: string) {
+function renderCodeFigure(code: string, preClassName?: string) {
+  const isJson = code.trim().startsWith("{");
+
+  function renderJsonLine(line: string, index: number) {
+    const trimmed = line.trim();
+
+    if (trimmed === "{" || trimmed === "}") {
+      return (
+        <span className="block text-muted-foreground" key={`${index}-${line}`}>
+          {line}
+        </span>
+      );
+    }
+
+    const match = line.match(/^(\s*)"([^"]+)":\s"([^"]+)"(,?)$/);
+    if (!match) {
+      return (
+        <span className="block text-foreground" key={`${index}-${line}`}>
+          {line}
+        </span>
+      );
+    }
+
+    const [, indent, key, stringValue, comma] = match;
+
+    return (
+      <span className="block" key={`${index}-${line}`}>
+        <span className="text-foreground/55">{indent}</span>
+        <span className="text-muted-foreground">"</span>
+        <span style={{ color: "var(--json-key, #cf222e)" }}>{key}</span>
+        <span className="text-muted-foreground">"</span>
+        <span className="text-foreground/70">: </span>
+        <span style={{ color: "var(--json-string, #0a3069)" }}>"</span>
+        <span style={{ color: "var(--json-string, #0a3069)" }}>{stringValue}</span>
+        <span style={{ color: "var(--json-string, #0a3069)" }}>"</span>
+        {comma ? <span className="text-muted-foreground">{comma}</span> : null}
+      </span>
+    );
+  }
+
   return (
     <figure className="m-0" data-rehype-pretty-code-figure="">
       <CopyButton value={code} />
-      <pre className="m-0 overflow-x-auto px-4 py-3.5">
+      <pre className={cn("m-0 overflow-x-auto bg-muted/35 px-4 py-3.5", preClassName)}>
         <code className="font-mono text-sm leading-6" data-language="tsx">
-          {code}
+          {isJson ? code.split("\n").map(renderJsonLine) : code}
         </code>
       </pre>
     </figure>
@@ -312,27 +352,37 @@ export function ComponentPreviewClient({
   align = "center",
   caption,
   className,
+  codeClassName,
+  customPreview,
   direction = "ltr",
   hideCode = false,
   name,
+  previewWrapperClassName,
+  previewWrapperStyle,
   previewClassName,
+  rawPreview = false,
   previewSource,
   sourceCode,
 }: {
   align?: "center" | "start" | "end";
   caption?: string;
   className?: string;
+  codeClassName?: string;
+  customPreview?: ReactNode;
   direction?: "ltr" | "rtl";
   hideCode?: boolean;
   name: string;
+  previewWrapperClassName?: string;
+  previewWrapperStyle?: CSSProperties;
   previewClassName?: string;
+  rawPreview?: boolean;
   previewSource: string;
   sourceCode: string;
 }) {
   const [isCodeVisible, setIsCodeVisible] = useState(false);
   const [rtlLanguage, setRtlLanguage] = useState<RtlLanguage>("ar");
 
-  const previewContent = renderPreview(name, direction, rtlLanguage);
+  const previewContent = customPreview ?? renderPreview(name, direction, rtlLanguage);
   const content = (
     <div
       className={cn(
@@ -348,10 +398,14 @@ export function ComponentPreviewClient({
       <div data-slot="preview">
         <div
           className={cn(
-            "preview relative flex h-72 w-full justify-center p-10 data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start",
+            rawPreview ? "preview relative w-full" : "preview relative flex h-72 w-full p-10",
+            !rawPreview && align === "center" && "items-center justify-center",
+            !rawPreview && align === "start" && "items-start justify-start",
+            !rawPreview && align === "end" && "items-end justify-end",
+            previewWrapperClassName,
             previewClassName,
           )}
-          data-align={align}
+          style={previewWrapperStyle}
         >
           {previewContent}
         </div>
@@ -364,10 +418,10 @@ export function ComponentPreviewClient({
           data-slot="code"
         >
           {isCodeVisible ? (
-            <div className="component-preview-expanded">{renderCodeFigure(sourceCode)}</div>
+            <div className="component-preview-expanded">{renderCodeFigure(sourceCode, codeClassName)}</div>
           ) : (
             <div className="relative">
-              {renderCodeFigure(previewSource)}
+              {renderCodeFigure(previewSource, codeClassName)}
               <div
                 className="absolute inset-0 flex items-center justify-center pb-4"
                 style={{

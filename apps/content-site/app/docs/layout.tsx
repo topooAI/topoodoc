@@ -12,6 +12,7 @@ export default function DocsSectionLayout({ children }: { children: ReactNode })
       homeAriaLabel={docsSite.shell.homeAriaLabel}
       homeHref={docsSite.shell.homeHref}
       navLabelByUrl={docsSite.shell.navLabelByUrl}
+      sidebarSectionsByRoot={docsSite.shell.sidebarSectionsByRoot}
       newHref={docsSite.shell.newHref}
       newLabel={docsSite.shell.newLabel}
       primaryNav={docsSite.shell.primaryNav}

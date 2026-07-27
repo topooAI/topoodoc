@@ -1,0 +1,13 @@
+{
+  "title": "Document",
+  "pages": [
+    "index",
+    "schema",
+    "renderer-contract",
+    "publishing-framework",
+    "blocks",
+    "typography",
+    "layout-rules",
+    "content-ownership"
+  ]
+}
