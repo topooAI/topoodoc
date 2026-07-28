@@ -241,7 +241,13 @@ async function readJsonIfExists(filePath, fallback) {
   }
 }
 
-async function buildSidebarSectionsByRoot({ boards, blocks, topics, docsDir }) {
+async function buildSidebarSectionsByRoot({
+  boards,
+  blocks,
+  topics,
+  docsDir,
+  sidebarBoardIncludesByRoot = {},
+}) {
   const topicsByBlock = new Map();
   for (const topic of topics) {
     const list = topicsByBlock.get(topic.blockId) ?? [];
@@ -268,7 +274,9 @@ async function buildSidebarSectionsByRoot({ boards, blocks, topics, docsDir }) {
       continue;
     }
 
-    const boardBlocks = blocksByBoard.get(board.id) ?? [];
+    const boardBlocks = (blocksByBoard.get(board.id) ?? []).filter(
+      (block) => block.navigation !== false,
+    );
     const sections = boardBlocks
       .map((block) => {
         const blockTopics = [...(topicsByBlock.get(block.id) ?? [])].sort(
@@ -292,6 +300,40 @@ async function buildSidebarSectionsByRoot({ boards, blocks, topics, docsDir }) {
 
     if (sections.length > 0) {
       result[board.id] = sections;
+    }
+  }
+
+  const boardById = new Map(boards.map((board) => [board.id, board]));
+
+  for (const [rootId, includedBoardIds] of Object.entries(sidebarBoardIncludesByRoot)) {
+    const composedSections = [];
+
+    for (const boardId of includedBoardIds) {
+      const boardSections = result[boardId] ?? [];
+
+      if (boardId === rootId) {
+        composedSections.push(...boardSections);
+        continue;
+      }
+
+      const board = boardById.get(boardId);
+      const items = boardSections.flatMap((section) =>
+        section.items.map((item) => ({
+          ...item,
+          label: item.label === "Overview" ? section.label : item.label,
+        })),
+      );
+
+      if (board?.label && items.length > 0) {
+        composedSections.push({
+          label: board.label,
+          items,
+        });
+      }
+    }
+
+    if (composedSections.length > 0) {
+      result[rootId] = composedSections;
     }
   }
 
@@ -354,6 +396,7 @@ contentConfig.navigation.sidebarSectionsByRoot = await buildSidebarSectionsByRoo
   blocks,
   topics,
   docsDir: contentTargetDir,
+  sidebarBoardIncludesByRoot: contentConfig.navigation.sidebarBoardIncludesByRoot,
 });
 const docFiles = await collectDocFiles(contentTargetDir);
 const navLabelByUrl = {};
