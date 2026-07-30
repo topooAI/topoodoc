@@ -97,8 +97,8 @@ export function LinkedCard({
       href={href}
       className={cn(
         isFrameworkCard
-          ? "not-prose flex w-full flex-col items-center rounded-xl bg-surface p-6 text-surface-foreground no-underline transition-colors hover:bg-surface/80 sm:p-10 [&_p]:mt-2 [&_p]:text-[15px] [&_p]:leading-[22.5px] [&_p]:font-medium"
-          : "not-prose flex h-full min-h-[132px] flex-col justify-start rounded-xl border bg-background p-6 text-sm no-underline transition-colors hover:bg-accent/30",
+          ? "not-prose flex w-full flex-col items-center rounded-xl bg-surface p-6 text-surface-foreground no-underline transition-colors hover:bg-surface/80 sm:p-10 [&_p]:mt-2 [&_p]:text-[13px] [&_p]:leading-5 [&_p]:font-medium"
+          : "not-prose flex h-full min-h-[132px] flex-col justify-start rounded-xl border bg-background p-6 text-[13px] leading-5 no-underline transition-colors hover:bg-accent/30",
         className,
       )}
       {...props}
@@ -114,7 +114,7 @@ export function Steps({ children, className }: { children: ReactNode; className?
 
 export function Step({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <h3 className={cn("step scroll-m-24 text-lg font-medium tracking-[-0.45px]", className)}>
+    <h3 className={cn("step scroll-m-24 text-[14px] leading-5 font-medium tracking-[-0.35px]", className)}>
       {children}
     </h3>
   );

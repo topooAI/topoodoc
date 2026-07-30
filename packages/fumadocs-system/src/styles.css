@@ -262,7 +262,7 @@
 
   .topoo-docs-prose {
     font-family: var(--font-topoo-sans), ui-sans-serif, system-ui, sans-serif;
-    @apply pb-16 text-[15px] leading-[24.375px] text-foreground;
+    @apply pb-16 text-[13px] leading-[21px] text-foreground;
   }
 
   .topoo-docs-prose :where(:not(pre, code, kbd, samp)) {
@@ -274,7 +274,7 @@
   }
 
   .topoo-docs-prose p {
-    @apply text-[15px] leading-[24.375px] text-foreground;
+    @apply text-[13px] leading-[21px] text-foreground;
   }
 
   .topoo-docs-prose p + p,
@@ -289,19 +289,19 @@
   .topoo-docs-prose h2 {
     margin-top: 3rem;
     margin-bottom: 0;
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 16px;
+    line-height: 24px;
     font-weight: 500;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.4px;
   }
 
   .topoo-docs-prose h3 {
     margin-top: 2rem;
     margin-bottom: 0;
-    font-size: 18px;
-    line-height: 28px;
+    font-size: 14px;
+    line-height: 20px;
     font-weight: 500;
-    letter-spacing: -0.45px;
+    letter-spacing: -0.35px;
   }
 
   .topoo-docs-prose ul,
@@ -319,7 +319,7 @@
   }
 
   .topoo-docs-prose li {
-    @apply text-[15px] leading-[24.375px] text-foreground;
+    @apply text-[13px] leading-[21px] text-foreground;
   }
 
   .topoo-docs-prose li + li {
@@ -375,7 +375,7 @@
     border-radius: calc(var(--radius) * 1.4);
     background-color: var(--color-code);
     color: var(--color-code-foreground);
-    font-size: var(--text-sm);
+    font-size: 13px;
     @apply -mx-1;
   }
 
@@ -385,7 +385,7 @@
     border-bottom: 1px solid color-mix(in oklab, var(--border) 30%, transparent);
     color: var(--color-code-foreground);
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    font-size: 13px;
   }
 
   [data-rehype-pretty-code-figure] pre {
@@ -442,7 +442,7 @@
     background-color: var(--color-code);
     color: var(--color-code-number);
     text-align: right;
-    font-size: var(--text-sm);
+    font-size: 13px;
     counter-increment: line;
     content: counter(line);
   }

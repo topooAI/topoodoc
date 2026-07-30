@@ -115,12 +115,12 @@ export function getFumadocsSystemMDXComponents(components?: MDXComponents): MDXC
   return {
     ...defaultMdxComponents,
     h1: ({ className, ...props }) => (
-      <h1 className={cn("mt-2 scroll-m-28 text-3xl font-semibold tracking-tight", className)} {...props} />
+      <h1 className={cn("mt-2 scroll-m-28 text-[18px] leading-6 font-semibold tracking-tight", className)} {...props} />
     ),
     h2: ({ className, children, id, ...props }) => (
       <h2
         className={cn(
-          "[&+]*:[code]:text-xl mt-10 scroll-m-28 text-xl font-medium tracking-tight first:mt-0 lg:mt-12 [&+p]:mt-4! [&+ul]:mt-4! [&+ol]:mt-4!",
+          "[&+]*:[code]:text-[16px] mt-10 scroll-m-28 text-[16px] leading-6 font-medium tracking-tight first:mt-0 lg:mt-12 [&+p]:mt-4! [&+ul]:mt-4! [&+ol]:mt-4!",
           className,
         )}
         id={id ?? slugify(children)}
@@ -130,16 +130,16 @@ export function getFumadocsSystemMDXComponents(components?: MDXComponents): MDXC
       </h2>
     ),
     h3: ({ className, ...props }) => (
-      <h3 className={cn("mt-12 scroll-m-28 text-lg font-medium tracking-tight [&+p]:mt-4!", className)} {...props} />
+      <h3 className={cn("mt-12 scroll-m-28 text-[14px] leading-5 font-medium tracking-tight [&+p]:mt-4!", className)} {...props} />
     ),
     h4: ({ className, ...props }) => (
-      <h4 className={cn("mt-8 scroll-m-28 text-base font-medium tracking-tight", className)} {...props} />
+      <h4 className={cn("mt-8 scroll-m-28 text-[13px] leading-5 font-medium tracking-tight", className)} {...props} />
     ),
     h5: ({ className, ...props }) => (
-      <h5 className={cn("mt-8 scroll-m-28 text-base font-medium tracking-tight", className)} {...props} />
+      <h5 className={cn("mt-8 scroll-m-28 text-[13px] leading-5 font-medium tracking-tight", className)} {...props} />
     ),
     h6: ({ className, ...props }) => (
-      <h6 className={cn("mt-8 scroll-m-28 text-base font-medium tracking-tight", className)} {...props} />
+      <h6 className={cn("mt-8 scroll-m-28 text-[13px] leading-5 font-medium tracking-tight", className)} {...props} />
     ),
     a: ({ className, ...props }) => (
       <a className={cn("font-medium underline underline-offset-4", className)} {...props} />
@@ -159,7 +159,7 @@ export function getFumadocsSystemMDXComponents(components?: MDXComponents): MDXC
       <div className="my-6 no-scrollbar w-full overflow-y-auto rounded-xl border">
         <table
           className={cn(
-            "relative w-full overflow-hidden border-none text-sm [&_tbody_tr:last-child]:border-b-0",
+            "relative w-full overflow-hidden border-none text-[13px] [&_tbody_tr:last-child]:border-b-0",
             className,
           )}
           {...props}
