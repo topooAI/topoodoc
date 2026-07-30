@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  type MouseEventHandler,
+  type ReactNode,
+} from "react";
 import { DocsBrand } from "./docs-brand";
 import { DocsToolbarSearch } from "./docs-toolbar-search";
 import { Button } from "./ui/button";
@@ -218,19 +223,24 @@ function buildSidebarSections(
 }
 
 function SidebarLink({
+  ariaExpanded,
   className,
   href,
   isCurrent,
   label,
+  onClick,
 }: {
+  ariaExpanded?: boolean;
   className?: string;
   href: string;
   isCurrent: boolean;
   label: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }) {
   return (
     <Link
       aria-current={isCurrent ? "page" : undefined}
+      aria-expanded={ariaExpanded}
       className={cn(
         "relative inline-flex h-[30px] w-fit max-w-full items-center gap-2 overflow-visible rounded-md border border-transparent px-2 text-[0.8rem] font-medium text-foreground/82 transition-colors hover:text-foreground",
         "after:absolute after:inset-x-0 after:-inset-y-1 after:z-0 after:rounded-md",
@@ -238,6 +248,7 @@ function SidebarLink({
         className,
       )}
       href={href}
+      onClick={onClick}
     >
       <span className="relative z-10 truncate">{label}</span>
     </Link>
@@ -252,8 +263,13 @@ function SidebarNavItem({
   pathname: string;
 }) {
   const children = item.children ?? [];
-  const open = isActive(pathname, item.href)
+  const containsCurrentPage = isActive(pathname, item.href)
     || children.some((child) => isActive(pathname, child.href));
+  const [open, setOpen] = useState(containsCurrentPage);
+
+  useEffect(() => {
+    setOpen(containsCurrentPage);
+  }, [containsCurrentPage]);
 
   if (children.length === 0) {
     return (
@@ -268,10 +284,20 @@ function SidebarNavItem({
   return (
     <div>
       <SidebarLink
+        ariaExpanded={open}
         className="w-full"
         href={item.href}
         isCurrent={pathname === item.href}
         label={item.label}
+        onClick={(event) => {
+          if (containsCurrentPage) {
+            event.preventDefault();
+            setOpen((current) => !current);
+            return;
+          }
+
+          setOpen(true);
+        }}
       />
       <div
         aria-hidden={!open}
