@@ -86,12 +86,12 @@ export default async function DocsPageRoute({ params }: DocsPageProps) {
   const relativeLink = createRelativeLink(source, page);
 
   return (
-    <div className="flex scroll-mt-24 items-stretch pb-8 text-[13px] leading-[21px] xl:w-full">
+    <div className="topoo-docs-body flex scroll-mt-24 items-stretch pb-8 xl:w-full">
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="mx-auto flex w-full max-w-[40rem] min-w-0 flex-1 flex-col gap-6 px-4 pt-10 pb-6 md:px-0 lg:pt-12 lg:pb-8">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between md:items-start">
-              <h1 className="scroll-m-24 text-[18px] leading-6 font-semibold tracking-tight">{page.data.title}</h1>
+              <h1 className="topoo-docs-page-title scroll-m-24 font-semibold tracking-tight">{page.data.title}</h1>
               <div className="hidden sm:block">
                 <DocsCopyPage
                   content={raw}
@@ -104,7 +104,7 @@ export default async function DocsPageRoute({ params }: DocsPageProps) {
             </div>
 
             {page.data.description ? (
-              <p className="text-[13px] leading-5 text-muted-foreground md:max-w-[80%]">{page.data.description}</p>
+              <p className="topoo-docs-page-description text-muted-foreground md:max-w-[80%]">{page.data.description}</p>
             ) : null}
           </div>
 
@@ -159,7 +159,7 @@ export default async function DocsPageRoute({ params }: DocsPageProps) {
       <div className="sticky top-[calc(var(--header-height)+1px)] z-30 ml-auto hidden h-[90svh] w-64 shrink-0 flex-col gap-4 overflow-hidden overscroll-none pb-8 xl:flex">
         <div className="no-scrollbar flex flex-col gap-8 overflow-y-auto px-6 pt-8">
           <DocsTableOfContents toc={tocItems} />
-          <div className="w-full rounded-xl border bg-muted/40 p-5 text-[13px] leading-5">
+          <div className="topoo-docs-page-description w-full rounded-xl border bg-muted/40 p-5">
             <div className="font-semibold leading-6">Topoo documentation system</div>
             <p className="mt-2 text-muted-foreground">
               This board structure now separates desktop docs, work surfaces, and TopooUI references.

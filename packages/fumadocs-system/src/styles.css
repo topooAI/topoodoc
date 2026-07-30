@@ -35,6 +35,14 @@
   --selection: oklch(0.145 0 0);
   --selection-foreground: oklch(1 0 0);
   --header-height: calc(var(--spacing) * 14);
+  --topoo-docs-page-title-font-size: 18px;
+  --topoo-docs-section-title-font-size: 16px;
+  --topoo-docs-subsection-title-font-size: 14px;
+  --topoo-docs-body-font-size: 13px;
+  --topoo-docs-page-title-line-height: 24px;
+  --topoo-docs-section-title-line-height: 24px;
+  --topoo-docs-compact-line-height: 20px;
+  --topoo-docs-body-line-height: 21px;
   --color-fd-background: hsl(0 0% 100%);
   --color-fd-foreground: hsl(0 0% 9%);
   --color-fd-muted: hsl(0 0% 97%);
@@ -151,6 +159,32 @@
 }
 
 @layer components {
+  .topoo-docs-page-title {
+    font-size: var(--topoo-docs-page-title-font-size);
+    line-height: var(--topoo-docs-page-title-line-height);
+  }
+
+  .topoo-docs-page-description,
+  .topoo-docs-body-title {
+    font-size: var(--topoo-docs-body-font-size);
+    line-height: var(--topoo-docs-compact-line-height);
+  }
+
+  .topoo-docs-body {
+    font-size: var(--topoo-docs-body-font-size);
+    line-height: var(--topoo-docs-body-line-height);
+  }
+
+  .topoo-docs-section-title {
+    font-size: var(--topoo-docs-section-title-font-size);
+    line-height: var(--topoo-docs-section-title-line-height);
+  }
+
+  .topoo-docs-subsection-title {
+    font-size: var(--topoo-docs-subsection-title-font-size);
+    line-height: var(--topoo-docs-compact-line-height);
+  }
+
   .docs-toolbar-search-shell {
     position: relative;
     width: 28px;
@@ -262,7 +296,10 @@
 
   .topoo-docs-prose {
     font-family: var(--font-topoo-sans), ui-sans-serif, system-ui, sans-serif;
-    @apply pb-16 text-[13px] leading-[21px] text-foreground;
+    padding-bottom: calc(var(--spacing) * 16);
+    color: var(--foreground);
+    font-size: var(--topoo-docs-body-font-size);
+    line-height: var(--topoo-docs-body-line-height);
   }
 
   .topoo-docs-prose :where(:not(pre, code, kbd, samp)) {
@@ -274,7 +311,9 @@
   }
 
   .topoo-docs-prose p {
-    @apply text-[13px] leading-[21px] text-foreground;
+    color: var(--foreground);
+    font-size: var(--topoo-docs-body-font-size);
+    line-height: var(--topoo-docs-body-line-height);
   }
 
   .topoo-docs-prose p + p,
@@ -289,8 +328,8 @@
   .topoo-docs-prose h2 {
     margin-top: 3rem;
     margin-bottom: 0;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: var(--topoo-docs-section-title-font-size);
+    line-height: var(--topoo-docs-section-title-line-height);
     font-weight: 500;
     letter-spacing: -0.4px;
   }
@@ -298,8 +337,8 @@
   .topoo-docs-prose h3 {
     margin-top: 2rem;
     margin-bottom: 0;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--topoo-docs-subsection-title-font-size);
+    line-height: var(--topoo-docs-compact-line-height);
     font-weight: 500;
     letter-spacing: -0.35px;
   }
@@ -319,7 +358,9 @@
   }
 
   .topoo-docs-prose li {
-    @apply text-[13px] leading-[21px] text-foreground;
+    color: var(--foreground);
+    font-size: var(--topoo-docs-body-font-size);
+    line-height: var(--topoo-docs-body-line-height);
   }
 
   .topoo-docs-prose li + li {
@@ -375,7 +416,7 @@
     border-radius: calc(var(--radius) * 1.4);
     background-color: var(--color-code);
     color: var(--color-code-foreground);
-    font-size: 13px;
+    font-size: var(--topoo-docs-body-font-size);
     @apply -mx-1;
   }
 
@@ -385,7 +426,7 @@
     border-bottom: 1px solid color-mix(in oklab, var(--border) 30%, transparent);
     color: var(--color-code-foreground);
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--topoo-docs-body-font-size);
   }
 
   [data-rehype-pretty-code-figure] pre {
@@ -442,7 +483,7 @@
     background-color: var(--color-code);
     color: var(--color-code-number);
     text-align: right;
-    font-size: 13px;
+    font-size: var(--topoo-docs-body-font-size);
     counter-increment: line;
     content: counter(line);
   }

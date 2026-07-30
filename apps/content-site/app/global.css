@@ -1,1 +1,38 @@
 @import "./live-baseline.css";
+
+:root {
+  --topoo-docs-page-title-font-size: 18px;
+  --topoo-docs-section-title-font-size: 16px;
+  --topoo-docs-subsection-title-font-size: 14px;
+  --topoo-docs-body-font-size: 13px;
+  --topoo-docs-page-title-line-height: 24px;
+  --topoo-docs-section-title-line-height: 24px;
+  --topoo-docs-compact-line-height: 20px;
+  --topoo-docs-body-line-height: 21px;
+}
+
+.topoo-docs-page-title {
+  font-size: var(--topoo-docs-page-title-font-size);
+  line-height: var(--topoo-docs-page-title-line-height);
+}
+
+.topoo-docs-page-description,
+.topoo-docs-body-title {
+  font-size: var(--topoo-docs-body-font-size);
+  line-height: var(--topoo-docs-compact-line-height);
+}
+
+.topoo-docs-body {
+  font-size: var(--topoo-docs-body-font-size);
+  line-height: var(--topoo-docs-body-line-height);
+}
+
+.topoo-docs-section-title {
+  font-size: var(--topoo-docs-section-title-font-size);
+  line-height: var(--topoo-docs-section-title-line-height);
+}
+
+.topoo-docs-subsection-title {
+  font-size: var(--topoo-docs-subsection-title-font-size);
+  line-height: var(--topoo-docs-compact-line-height);
+}
