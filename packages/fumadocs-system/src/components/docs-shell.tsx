@@ -309,7 +309,13 @@ function SidebarNavItem({
           transition: "max-height 200ms ease, opacity 200ms ease",
         }}
       >
-        <ul className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
+        <ul
+          className="flex flex-col gap-0.5 border-l border-border/70"
+          style={{
+            marginLeft: "12px",
+            paddingLeft: "8px",
+          }}
+        >
           {children.map((child) => (
             <li key={child.href}>
               <SidebarLink
