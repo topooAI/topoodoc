@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { DocsBrand } from "./docs-brand";
 import { DocsToolbarSearch } from "./docs-toolbar-search";
 import { Button } from "./ui/button";
@@ -244,29 +244,6 @@ function SidebarLink({
   );
 }
 
-function ChevronIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className="size-3.5"
-      style={{
-        transform: open ? "rotate(90deg)" : "rotate(0deg)",
-        transition: "transform 200ms ease",
-      }}
-      viewBox="0 0 20 20"
-    >
-      <path
-        d="m7.5 4.75 5 5-5 5"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-      />
-    </svg>
-  );
-}
-
 function SidebarNavItem({
   item,
   pathname,
@@ -275,15 +252,8 @@ function SidebarNavItem({
   pathname: string;
 }) {
   const children = item.children ?? [];
-  const containsCurrentPage = isActive(pathname, item.href)
+  const open = isActive(pathname, item.href)
     || children.some((child) => isActive(pathname, child.href));
-  const [open, setOpen] = useState(containsCurrentPage);
-
-  useEffect(() => {
-    if (containsCurrentPage) {
-      setOpen(true);
-    }
-  }, [containsCurrentPage]);
 
   if (children.length === 0) {
     return (
@@ -297,23 +267,12 @@ function SidebarNavItem({
 
   return (
     <div>
-      <div className="flex w-full items-center gap-0.5">
-        <SidebarLink
-          className="min-w-0 flex-1"
-          href={item.href}
-          isCurrent={pathname === item.href}
-          label={item.label}
-        />
-        <button
-          aria-expanded={open}
-          aria-label={`${open ? "Collapse" : "Expand"} ${item.label}`}
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-foreground/48 transition-colors hover:bg-accent hover:text-foreground"
-          onClick={() => setOpen((current) => !current)}
-          type="button"
-        >
-          <ChevronIcon open={open} />
-        </button>
-      </div>
+      <SidebarLink
+        className="w-full"
+        href={item.href}
+        isCurrent={pathname === item.href}
+        label={item.label}
+      />
       <div
         aria-hidden={!open}
         className="overflow-hidden"
