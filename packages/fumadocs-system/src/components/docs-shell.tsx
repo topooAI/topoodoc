@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { DocsBrand } from "./docs-brand";
 import { DocsToolbarSearch } from "./docs-toolbar-search";
 import { Button } from "./ui/button";
@@ -12,6 +12,7 @@ import { cn } from "../lib/utils";
 export type DocsShellNavItem = {
   href: string;
   label: string;
+  children?: readonly DocsShellNavItem[];
 };
 
 type NavSection = {
@@ -183,7 +184,8 @@ function buildSidebarSections(
       ? pathname.split("/")[2] ?? "topoo"
       : "topoo";
 
-  const configuredSections = sidebarSectionsByRoot[rootKey];
+  const sidebarRootKey = rootKey === "cloud" ? "topoo" : rootKey;
+  const configuredSections = sidebarSectionsByRoot[sidebarRootKey];
   if (configuredSections?.length) {
     return configuredSections;
   }
@@ -216,10 +218,12 @@ function buildSidebarSections(
 }
 
 function SidebarLink({
+  className,
   href,
   isCurrent,
   label,
 }: {
+  className?: string;
   href: string;
   isCurrent: boolean;
   label: string;
@@ -231,11 +235,108 @@ function SidebarLink({
         "relative inline-flex h-[30px] w-fit max-w-full items-center gap-2 overflow-visible rounded-md border border-transparent px-2 text-[0.8rem] font-medium text-foreground/82 transition-colors hover:text-foreground",
         "after:absolute after:inset-x-0 after:-inset-y-1 after:z-0 after:rounded-md",
         isCurrent && "border-accent bg-accent text-foreground",
+        className,
       )}
       href={href}
     >
       <span className="relative z-10 truncate">{label}</span>
     </Link>
+  );
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="size-3.5"
+      style={{
+        transform: open ? "rotate(90deg)" : "rotate(0deg)",
+        transition: "transform 200ms ease",
+      }}
+      viewBox="0 0 20 20"
+    >
+      <path
+        d="m7.5 4.75 5 5-5 5"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
+function SidebarNavItem({
+  item,
+  pathname,
+}: {
+  item: DocsShellNavItem;
+  pathname: string;
+}) {
+  const children = item.children ?? [];
+  const containsCurrentPage = isActive(pathname, item.href)
+    || children.some((child) => isActive(pathname, child.href));
+  const [open, setOpen] = useState(containsCurrentPage);
+
+  useEffect(() => {
+    if (containsCurrentPage) {
+      setOpen(true);
+    }
+  }, [containsCurrentPage]);
+
+  if (children.length === 0) {
+    return (
+      <SidebarLink
+        href={item.href}
+        isCurrent={pathname === item.href}
+        label={item.label}
+      />
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex w-full items-center gap-0.5">
+        <SidebarLink
+          className="min-w-0 flex-1"
+          href={item.href}
+          isCurrent={pathname === item.href}
+          label={item.label}
+        />
+        <button
+          aria-expanded={open}
+          aria-label={`${open ? "Collapse" : "Expand"} ${item.label}`}
+          className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-foreground/48 transition-colors hover:bg-accent hover:text-foreground"
+          onClick={() => setOpen((current) => !current)}
+          type="button"
+        >
+          <ChevronIcon open={open} />
+        </button>
+      </div>
+      <div
+        aria-hidden={!open}
+        className="overflow-hidden"
+        inert={!open}
+        style={{
+          maxHeight: open ? `${children.length * 32}px` : "0px",
+          opacity: open ? 1 : 0,
+          transition: "max-height 200ms ease, opacity 200ms ease",
+        }}
+      >
+        <ul className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
+          {children.map((child) => (
+            <li key={child.href}>
+              <SidebarLink
+                href={child.href}
+                isCurrent={pathname === child.href}
+                label={child.label}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 
@@ -338,7 +439,7 @@ export function DocsShell({
                   <ul className="flex flex-col gap-0.5">
                     {section.items.map((item) => (
                       <li key={item.href}>
-                        <SidebarLink href={item.href} isCurrent={isActive(pathname, item.href)} label={item.label} />
+                        <SidebarNavItem item={item} pathname={pathname} />
                       </li>
                     ))}
                   </ul>

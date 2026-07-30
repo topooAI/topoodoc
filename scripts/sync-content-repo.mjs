@@ -317,12 +317,18 @@ async function buildSidebarSectionsByRoot({
       }
 
       const board = boardById.get(boardId);
-      const items = boardSections.flatMap((section) =>
-        section.items.map((item) => ({
-          ...item,
-          label: item.label === "Overview" ? section.label : item.label,
-        })),
-      );
+      const items = boardSections.flatMap((section) => {
+        const [overview, ...children] = section.items;
+        if (!overview) {
+          return [];
+        }
+
+        return [{
+          ...overview,
+          label: overview.label === "Overview" ? section.label : overview.label,
+          ...(children.length > 0 ? { children } : {}),
+        }];
+      });
 
       if (board?.label && items.length > 0) {
         composedSections.push({
